@@ -1,0 +1,33 @@
+﻿<Window x:Class="Arina3dEditor.Test"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Arina3dEditor"
+        mc:Ignorable="d"
+        Title="Test" Height="450" Width="800">
+    <Grid Background="#FF333333">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="739*"/>
+            <ColumnDefinition Width="55*"/>
+        </Grid.ColumnDefinitions>
+
+        <Viewport3D Name="vp3Test" Grid.ColumnSpan="2" Margin="0,0,-0.4,0" MouseUp="Vp3Test_MouseUp">
+           
+            <!--<Viewport3D.Camera>
+                <PerspectiveCamera 
+                        FarPlaneDistance="20" 
+                        LookDirection="0,0,1" 
+                        UpDirection="0,1,0" 
+                        NearPlaneDistance="1" 
+                        Position="0,0,-3" 
+                        FieldOfView="45" />
+            </Viewport3D.Camera>-->
+            
+        </Viewport3D>
+        <TextBox x:Name="txtPositions" HorizontalAlignment="Left" Height="75" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="71"/>
+        <Button x:Name="btnDraw" Content="Draw" HorizontalAlignment="Left" Height="37" Margin="10,304,0,0" VerticalAlignment="Top" Width="71" Click="BtnDraw_Click"/>
+        <TextBox x:Name="txtTriangleIndices" HorizontalAlignment="Left" Height="75" Margin="10,111,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="71"/>
+        <TextBox x:Name="txtTextureCoordinates" HorizontalAlignment="Left" Height="75" Margin="10,204,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="71"/>
+    </Grid>
+</Window>

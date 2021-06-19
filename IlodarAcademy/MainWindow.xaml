@@ -3,10 +3,22 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:IlodarAcademy"
+        xmlns:local="clr-namespace:Aritiafel.IlodarAcademy"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Canvas x:Name="cavMain" HorizontalAlignment="Left" Height="386" Margin="10,10,0,0" VerticalAlignment="Top" Width="642">
-        <Button x:Name="btnOK" Content="確認" Height="29" Canvas.Left="655" Canvas.Top="-1" Width="91" Click="btnOK_Click"/>
-    </Canvas>
+        Title="MainWindow" Height="1034" Width="1165">
+    <Grid x:Name="grdMain" Background="#FF333333">
+        <Button x:Name="btnOK" Content="確認" HorizontalAlignment="Left" VerticalAlignment="Top" Height="29" Width="91" Click="btnOK_Click" Margin="1064,10,0,0"/>
+        <DockPanel x:Name="dplMain" HorizontalAlignment="Left" Height="597" LastChildFill="False" Margin="81,123,0,0" VerticalAlignment="Top" Width="720">
+            <Grid x:Name="grdInner" Background="White" Height="600" Width="600">
+            </Grid>
+        </DockPanel>
+        <!--<Canvas x:Name="cavMain" HorizontalAlignment="Left" Height="675" Margin="50,38,0,0" VerticalAlignment="Top" Width="964" >
+        </Canvas>-->
+        <!--<Viewbox x:Name="vibMain" HorizontalAlignment="Left" Height="652" Margin="50,61,0,0" VerticalAlignment="Top" Width="995">
+            <Viewbox.Child>
+            <Viewport3D x:Name="view3D" ClipToBounds="True">
+            </Viewport3D>
+            </Viewbox.Child>
+        </Viewbox>-->
+    </Grid>
 </Window>
