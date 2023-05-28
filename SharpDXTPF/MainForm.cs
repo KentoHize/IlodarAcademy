@@ -61,17 +61,34 @@ namespace SharpDXTPF
             switch (e.KeyChar)
             {
                 case 'q':
-                    area.Viewport = new ArViewport(area.Viewport.X + 10, area.Viewport.Y, area.Viewport.Width, area.Viewport.Height, 0, area.Viewport.MaxDepth);
+                    area.Viewport = new ArViewport(area.Viewport.X, area.Viewport.Y, area.Viewport.Width, area.Viewport.Height, area.Viewport.MinDepth, area.Viewport.MaxDepth + 10);
                     break;
                 case 'e':
+                    area.Viewport = new ArViewport(area.Viewport.X, area.Viewport.Y, area.Viewport.Width, area.Viewport.Height, area.Viewport.MinDepth, area.Viewport.MaxDepth - 10);
+                    break;
+                case 'y':
+                    area.Viewport = new ArViewport(area.Viewport.X, area.Viewport.Y, area.Viewport.Width, area.Viewport.Height - 10, area.Viewport.MinDepth, area.Viewport.MaxDepth);
+                    break;
+                case 'h':
+                    area.Viewport = new ArViewport(area.Viewport.X, area.Viewport.Y, area.Viewport.Width, area.Viewport.Height + 10, area.Viewport.MinDepth, area.Viewport.MaxDepth);
+                    break;
+                case 'g':
+                    area.Viewport = new ArViewport(area.Viewport.X, area.Viewport.Y, area.Viewport.Width - 10, area.Viewport.Height, area.Viewport.MinDepth, area.Viewport.MaxDepth);
+                    break;
+                case 'j':
+                    area.Viewport = new ArViewport(area.Viewport.X, area.Viewport.Y, area.Viewport.Width + 10, area.Viewport.Height, area.Viewport.MinDepth, area.Viewport.MaxDepth);
                     break;
                 case 'w':
+                    area.Viewport = new ArViewport(area.Viewport.X, area.Viewport.Y - 10, area.Viewport.Width, area.Viewport.Height, area.Viewport.MinDepth, area.Viewport.MaxDepth);
                     break;
                 case 's':
+                    area.Viewport = new ArViewport(area.Viewport.X, area.Viewport.Y + 10, area.Viewport.Width, area.Viewport.Height, area.Viewport.MinDepth, area.Viewport.MaxDepth);
                     break;
                 case 'a':
+                    area.Viewport = new ArViewport(area.Viewport.X - 10, area.Viewport.Y, area.Viewport.Width, area.Viewport.Height, area.Viewport.MinDepth, area.Viewport.MaxDepth);
                     break;
                 case 'd':
+                    area.Viewport = new ArViewport(area.Viewport.X + 10, area.Viewport.Y, area.Viewport.Width, area.Viewport.Height, area.Viewport.MinDepth, area.Viewport.MaxDepth);
                     break;
                 case 'x':
                     area.Models[0].Vertices[0].Color = new System.Numerics.Vector4(area.Models[0].Vertices[0].Color.X + 10);
