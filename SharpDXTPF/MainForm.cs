@@ -1,3 +1,4 @@
+using Aritiafel.IlodarAcademy.SharpDX;
 
 namespace SharpDXTPF
 {
@@ -9,8 +10,12 @@ namespace SharpDXTPF
         }
 
         private void MainForm_Load(object sender, EventArgs e)
-        {
-
+        {   
+            SharpDXEngine sde = new SharpDXEngine();
+            sde.LoadPipeline(pibMain.ClientSize.Width, pibMain.ClientSize.Height, pibMain.Handle);
+            sde.LoadAssets();
+            sde.PopulateCommandList();
+            sde.WaitForPreviousFrame();
         }
 
     }

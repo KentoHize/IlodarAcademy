@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
 
-namespace Aritaifel.IlodarAcademy
+namespace Aritiafel.IlodarAcademy
 {
     public class Ar3DModel
     {

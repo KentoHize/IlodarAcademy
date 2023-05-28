@@ -9,11 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SharpDX" Version="4.2.0" />
-    <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
-    <PackageReference Include="SharpDX.Desktop" Version="4.2.0" />
-    <PackageReference Include="SharpDX.Direct3D12" Version="4.2.0" />
-    <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
+    <Reference Include="Aritiafel.IlodarAcademy">
+      <HintPath>..\IlodarAcademy\bin\Debug\net7.0\Aritiafel.IlodarAcademy.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

@@ -6,6 +6,9 @@
     <Nullable>enable</Nullable>
     <AssemblyName>Aritiafel.$(MSBuildProjectName)</AssemblyName>
     <RootNamespace>Aritiafel.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,9 +1,9 @@
-﻿using SharpDX;
+﻿
 using SharpDX.Direct3D;
 using SharpDX.Direct3D12;
+using SharpDX;
 using SharpDX.DXGI;
 using SharpDX.D3DCompiler;
-using System;
 using Device = SharpDX.Direct3D12.Device;
 using Resource = SharpDX.Direct3D12.Resource;
 using ShaderBytecodeDC = SharpDX.D3DCompiler.ShaderBytecode;
@@ -11,10 +11,12 @@ using ShaderBytecodeD12 = SharpDX.Direct3D12.ShaderBytecode;
 
 namespace Aritiafel.IlodarAcademy.SharpDX
 {
+    
     public class SharpDXEngine
     {
+        
         public const string ShaderSLFile = "C:\\Programs\\IlodarAcademy\\IlodarAcademy\\SharpDX\\shaders.hlsl";
-
+        
         ViewportF viewport;
         Rectangle scissorRect;
         Device device;
@@ -123,7 +125,7 @@ namespace Aritiafel.IlodarAcademy.SharpDX
 #if DEBUG
             var pixelShader = new ShaderBytecodeD12(ShaderBytecodeDC.CompileFromFile(ShaderSLFile, "PSMain", "ps_5_0", ShaderFlags.Debug));
 #else
-            var pixelShader = new ShaderBytecodeD12(ShaderBytecodeDC.ShaderBytecode.CompileFromFile("shaders.hlsl", "PSMain", "ps_5_0"));
+            var pixelShader = new ShaderBytecodeD12(ShaderBytecodeDC.CompileFromFile("shaders.hlsl", "PSMain", "ps_5_0"));
 #endif
 
             // Define the vertex input layout.
@@ -198,6 +200,67 @@ namespace Aritiafel.IlodarAcademy.SharpDX
 
             // Create an event handle to use for frame synchronization.
             fenceEvent = new AutoResetEvent(false);
+        }
+
+        public void PopulateCommandList()
+        {
+            // Command list allocators can only be reset when the associated 
+            // command lists have finished execution on the GPU; apps should use 
+            // fences to determine GPU execution progress.
+            commandAllocator.Reset();
+
+            // However, when ExecuteCommandList() is called on a particular command 
+            // list, that command list can then be reset at any time and must be before 
+            // re-recording.
+            commandList.Reset(commandAllocator, pipelineState);
+
+
+            // Set necessary state.
+            commandList.SetGraphicsRootSignature(rootSignature);
+            commandList.SetViewport(viewport);
+            commandList.SetScissorRectangles(scissorRect);
+
+            // Indicate that the back buffer will be used as a render target.
+            commandList.ResourceBarrierTransition(renderTargets[frameIndex], ResourceStates.Present, ResourceStates.RenderTarget);
+
+            var rtvHandle = renderTargetViewHeap.CPUDescriptorHandleForHeapStart;
+            rtvHandle += frameIndex * rtvDescriptorSize;
+            commandList.SetRenderTargets(rtvHandle, null);
+
+            // Record commands.
+            commandList.ClearRenderTargetView(rtvHandle, new Color4(0, 0.2F, 0.4f, 1), 0, null);
+
+            commandList.PrimitiveTopology = PrimitiveTopology.TriangleList;
+            commandList.SetVertexBuffer(0, vertexBufferView);
+            commandList.DrawInstanced(3, 1, 0, 0);
+
+            // Indicate that the back buffer will now be used to present.
+            commandList.ResourceBarrierTransition(renderTargets[frameIndex], ResourceStates.RenderTarget, ResourceStates.Present);
+
+            commandList.Close();
+        }
+
+
+        /// <summary> 
+        /// Wait the previous command list to finish executing. 
+        /// </summary> 
+        public void WaitForPreviousFrame()
+        {
+            // WAITING FOR THE FRAME TO COMPLETE BEFORE CONTINUING IS NOT BEST PRACTICE. 
+            // This is code implemented as such for simplicity. 
+
+            int localFence = fenceValue;
+            commandQueue.Signal(this.fence, localFence);
+            fenceValue++;
+
+            // Wait until the previous frame is finished.
+            if (this.fence.CompletedValue < localFence)
+            {
+                this.fence.SetEventOnCompletion(localFence, fenceEvent.SafeWaitHandle.DangerousGetHandle());
+                fenceEvent.WaitOne();
+            }
+
+            frameIndex = swapChain.CurrentBackBufferIndex;
         }
     }
 
