@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,11 +22,24 @@ namespace Aritiafel.IlodarAcademy.SharpDX
             => new Color4(a.R / 255f, a.G / 255f, a.B / 255f, a.A / 255f);
         public static Vertex ToSharpDXVertex(this ArVertex a)
             => new Vertex { Position = new Vector3(a.Position.X, a.Position.Y, a.Position.Z), Color = a.Color.ToSharpDXVector4() };
-        public static Vertex[] ToSharpDXModel(this Ar3DModel a)
+
+        public static Vertex[] ToSharpDXPlane(this ArPlane a)
         {
             Vertex[] result = new Vertex[a.Vertices.LongLength];
             for (long i = 0; i < a.Vertices.LongLength; i++)
                 result[i] = a.Vertices[i].ToSharpDXVertex();
+            return result;
+        } 
+
+        public static Vertex[] ToSharpDXModel(this Ar3DModel a)
+        {   
+            Vertex[] result;
+            List<ArVertex> vs = new List<ArVertex>();            
+            for(int i = 0; i < a.Planes.Length; i++)
+                vs.AddRange(a.Planes[i].Vertices);
+            result = new Vertex[vs.Count];
+            for (int i = 0; i < vs.Count; i++)
+                result[i] = vs[i].ToSharpDXVertex();
             return result;
         }
     }

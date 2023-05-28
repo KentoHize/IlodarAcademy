@@ -32,7 +32,7 @@ namespace SharpDXTPF
             area = new Ar3DArea();
             area.BackgroudColor = Color.Black;
             area.Models = new Ar3DModel[] { model, model2 };
-            area.Viewport = new ArViewport(0, 0, pibMain.ClientSize.Width, pibMain.ClientSize.Height);
+            area.Viewport = new ArViewport(0, 0, pibMain.ClientSize.Width, pibMain.ClientSize.Height, 0, 20);
 
 
             sde = new SharpDXEngine();            

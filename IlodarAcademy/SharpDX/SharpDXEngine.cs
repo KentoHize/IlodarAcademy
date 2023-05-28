@@ -8,8 +8,7 @@ using Device = SharpDX.Direct3D12.Device;
 using Resource = SharpDX.Direct3D12.Resource;
 using ShaderBytecodeDC = SharpDX.D3DCompiler.ShaderBytecode;
 using ShaderBytecodeD12 = SharpDX.Direct3D12.ShaderBytecode;
-using System.Reflection.Metadata;
-using System.Reflection;
+using SharpDX.Mathematics;
 
 namespace Aritiafel.IlodarAcademy.SharpDX
 {
@@ -45,6 +44,7 @@ namespace Aritiafel.IlodarAcademy.SharpDX
         Fence fence;
         int fenceValue;
         int frameIndex;
+        //Matrix m = Matrix.Identity;
 
         public void Load(Ar3DArea? area = null, IntPtr? handle = null)
         {   
@@ -144,7 +144,7 @@ namespace Aritiafel.IlodarAcademy.SharpDX
                 // recommended. Every time the GPU needs it, the upload heap will be marshalled 
                 // over. Please read up on Default Heap usage. An upload heap is used here for 
                 // code simplicity and because there are very few verts to actually transfer.
-                vertexBuffer = device.CreateCommittedResource(new HeapProperties(HeapType.Upload), HeapFlags.None, ResourceDescription.Buffer(vertexBufferSize), ResourceStates.GenericRead);
+                vertexBuffer = device.CreateCommittedResource(new HeapProperties(HeapType.Default), HeapFlags.None, ResourceDescription.Buffer(vertexBufferSize), ResourceStates.GenericRead);
 
                 // Copy the triangle data to the vertex buffer.
                 IntPtr pVertexDataBegin = vertexBuffer.Map(0);
@@ -174,8 +174,7 @@ namespace Aritiafel.IlodarAcademy.SharpDX
             //        new Vertex() {Position=new Vector3(-0.25f, -0.25f * aspectRatio, 0.0f),Color=new Vector4(0.0f, 0.0f, 1.0f, 1.0f ) },
             //};
 
-            // Command lists are created in the recording state, but there is nothing
-            // to record yet. The main loop expects it to be closed, so close it now.
+
 
 
             // Create synchronization objects.
@@ -204,7 +203,9 @@ namespace Aritiafel.IlodarAcademy.SharpDX
 #else
             var pixelShader = new ShaderBytecodeD12(ShaderBytecodeDC.CompileFromFile("shaders.hlsl", "PSMain", "ps_5_0"));
 #endif
-
+            
+            
+                
             // Define the vertex input layout.
             var inputElementDescs = new[]
             {
@@ -235,6 +236,8 @@ namespace Aritiafel.IlodarAcademy.SharpDX
             pipelineState = device.CreateGraphicsPipelineState(psoDesc);
 
             // Create the command list.
+            // Command lists are created in the recording state, but there is nothing
+            // to record yet. The main loop expects it to be closed, so close it now.
             commandList = device.CreateCommandList(CommandListType.Direct, commandAllocator, pipelineState);
             commandList.Close();
 
@@ -262,6 +265,7 @@ namespace Aritiafel.IlodarAcademy.SharpDX
             viewport.Height = Area.Viewport.Height;
             viewport.MinDepth = Area.Viewport.MinDepth;
             viewport.MaxDepth = Area.Viewport.MaxDepth;
+            
             commandList.SetViewport(viewport);            
             //Scrissor自動設定
             scissorRect.X = 0;
@@ -281,7 +285,7 @@ namespace Aritiafel.IlodarAcademy.SharpDX
             commandList.ClearRenderTargetView(rtvHandle, Area.BackgroudColor.ToSharpDXColor4(), 0, null);
             for(long i = 0; i < bundles.LongLength; i++)
                 commandList.ExecuteBundle(bundles[i]);
-            
+            //Transfrom
             //commandList.ExecuteBundle(bundles[1]);
             // Indicate that the back buffer will now be used to present.
             commandList.ResourceBarrierTransition(renderTargets[frameIndex], ResourceStates.RenderTarget, ResourceStates.Present);

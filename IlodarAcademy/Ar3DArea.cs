@@ -11,9 +11,7 @@ namespace Aritiafel.IlodarAcademy
     {
         public Ar3DModel[] Models { get; set; }
         public Color BackgroudColor { get; set; } = Color.Black;
-        public ArViewport Viewport { get; set; }
-
-        
+        public ArViewport Viewport { get; set; }       
         
         public Ar3DArea(List<Ar3DModel> models)
             : this(models.ToArray())

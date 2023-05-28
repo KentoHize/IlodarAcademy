@@ -9,21 +9,17 @@ namespace Aritiafel.IlodarAcademy
 {
     public class Ar3DModel
     {
-        public ArVertex[] Vertices { get; set; }
-        public Ar3DModel(List<ArVertex> vertices)
-            : this(vertices.ToArray())
+        ArPlane[] m_planes;
+        public ArPlane[] Planes { get => m_planes; set { if (value.Length > int.MaxValue) throw new IndexOutOfRangeException(); m_planes = value; } }
+        public Ar3DModel(List<ArPlane> planes)
+            : this(planes.ToArray())
         { }
-
-        public Ar3DModel(ArVertex[] vertices)
+        public Ar3DModel(ArPlane[] planes)
         {
-            Vertices = vertices;
+            Planes = planes;
         }
 
         public Ar3DModel()
-        {           
-            
-        }
-
-        
+        { }
     }
 }
