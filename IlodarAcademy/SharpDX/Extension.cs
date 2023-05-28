@@ -16,7 +16,7 @@ namespace Aritiafel.IlodarAcademy.SharpDX
     public static class Extension
     {
         public static Vertex ToSharpDXVertex(this ArVertex a)
-            => new Vertex { Position = new Vector3(a.Position.X, a.Position.Y, a.Position.Z), Color = new Vector4(a.Color.X, a.Color.Y, a.Color.Z, a.Color.W) };
+            => new Vertex { Position = new Vector3(a.Position.X, a.Position.Y, a.Position.Z), Color = new Vector4(a.Color.Y / 255f, a.Color.Z / 255f, a.Color.W / 255f, a.Color.X / 255f) };
         public static Vertex[] ToSharpDXModel(this Ar3DModel a)
         {
             Vertex[] result = new Vertex[a.Vertices.LongLength];

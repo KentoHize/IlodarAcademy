@@ -31,6 +31,7 @@
         {
             pibMain = new PictureBox();
             btnRender = new Button();
+            btnScript = new Button();
             ((System.ComponentModel.ISupportInitialize)pibMain).BeginInit();
             SuspendLayout();
             // 
@@ -41,6 +42,7 @@
             pibMain.Size = new Size(1621, 971);
             pibMain.TabIndex = 0;
             pibMain.TabStop = false;
+            pibMain.MouseClick += pibMain_MouseClick;
             // 
             // btnRender
             // 
@@ -52,16 +54,28 @@
             btnRender.UseVisualStyleBackColor = true;
             btnRender.Click += btnRender_Click;
             // 
+            // btnScript
+            // 
+            btnScript.Location = new Point(1118, 45);
+            btnScript.Name = "btnScript";
+            btnScript.Size = new Size(151, 28);
+            btnScript.TabIndex = 2;
+            btnScript.Text = "Run Something";
+            btnScript.UseVisualStyleBackColor = true;
+            btnScript.Click += btnScript_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(9F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1620, 1055);
+            Controls.Add(btnScript);
             Controls.Add(btnRender);
             Controls.Add(pibMain);
             Name = "MainForm";
             Text = "MainForm";
             Load += MainForm_Load;
+            KeyPress += MainForm_KeyPress;
             ((System.ComponentModel.ISupportInitialize)pibMain).EndInit();
             ResumeLayout(false);
         }
@@ -70,5 +84,6 @@
 
         private PictureBox pibMain;
         private Button btnRender;
+        private Button btnScript;
     }
 }
