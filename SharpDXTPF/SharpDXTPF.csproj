@@ -9,9 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="Aritiafel.IlodarAcademy">
-      <HintPath>..\IlodarAcademy\bin\Debug\net7.0\Aritiafel.IlodarAcademy.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\IlodarAcademy\IlodarAcademy.csproj" />
   </ItemGroup>
 
   <ItemGroup>

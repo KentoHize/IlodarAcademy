@@ -37,8 +37,7 @@ namespace SharpDXTPF
             sde = new SharpDXEngine();
             sde.Area = area;
             sde.Handle = pibMain.Handle;
-            sde.LoadPipeline();
-            sde.LoadAssets();
+            sde.Load();            
             sde.Render();
         }
 
@@ -46,12 +45,13 @@ namespace SharpDXTPF
         {
             Ar3DModel model2 = new Ar3DModel();
             model2.Vertices = new ArVertex[3];
-            model2.Vertices[0] = new ArVertex(0, 0, 0, Color.White);
-            model2.Vertices[1] = new ArVertex(-3, -4, 0, Color.Red);
-            model2.Vertices[2] = new ArVertex(-3, 0, 0, Color.Green);
+            var aspectRatio = pibMain.ClientSize.Width / pibMain.ClientSize.Height;
+            model2.Vertices[0] = new ArVertex(0, 0.25f * aspectRatio, 0, Color.White);
+            model2.Vertices[1] = new ArVertex(0.25f, -0.25f * aspectRatio, 0, Color.Red);
+            model2.Vertices[2] = new ArVertex(-0.25f, -0.25f * aspectRatio, 0, Color.Green);
             area.Models = new Ar3DModel[] { model2 };
 
-            sde.LoadAssets2();
+            sde.Flush();
             sde.Render();
         }
 
@@ -92,7 +92,7 @@ namespace SharpDXTPF
                     break;
                 case 'x':
                     area.Models[0].Vertices[0].Color = new System.Numerics.Vector4(area.Models[0].Vertices[0].Color.X + 10);
-                    sde.LoadAssets2();
+                    sde.Flush();
                     break;
             }
             sde.Render();

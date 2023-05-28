@@ -18,6 +18,7 @@ namespace Aritiafel.IlodarAcademy.SharpDX
         public const string ShaderSLFile = "C:\\Programs\\IlodarAcademy\\IlodarAcademy\\SharpDX\\shaders.hlsl";
         public Ar3DArea? Area { get; set; }
         public IntPtr Handle { get; set; }
+        public ArSwapEffect SwapEffect { get; set; } = ArSwapEffect.FlipDiscard;
 
         ViewportF viewport;
         Rectangle scissorRect;
@@ -43,7 +44,19 @@ namespace Aritiafel.IlodarAcademy.SharpDX
         int fenceValue;
         int frameIndex;
 
-        public void LoadPipeline()
+        public void Load()
+        {
+            LoadPipeline();
+            LoadAssets();
+        }
+
+        public void Flush()
+        {
+            LoadAssets2();            
+        }
+
+
+        void LoadPipeline()
         {
             if (Area == null || Handle == nint.Zero)
                 return;
@@ -70,10 +83,10 @@ namespace Aritiafel.IlodarAcademy.SharpDX
                 // Describe and create the swap chain.
                 var swapChainDesc = new SwapChainDescription()
                 {
-                    BufferCount = FrameCount,
+                    BufferCount = FrameCount,                    
                     ModeDescription = new ModeDescription((int)viewport.Width, (int)viewport.Height, new Rational(60, 1), Format.R8G8B8A8_UNorm),
                     Usage = Usage.RenderTargetOutput,
-                    SwapEffect = SwapEffect.FlipDiscard,
+                    SwapEffect = (SwapEffect)SwapEffect,
                     OutputHandle = Handle,
                     //Flags = SwapChainFlags.None,
                     SampleDescription = new SampleDescription(1, 0),
@@ -110,7 +123,7 @@ namespace Aritiafel.IlodarAcademy.SharpDX
             commandAllocator = device.CreateCommandAllocator(CommandListType.Direct);
         }
    
-        public void LoadAssets2()
+        void LoadAssets2()
         {
             // Create the vertex buffer.
             float aspectRatio = viewport.Width / viewport.Height;
@@ -168,7 +181,7 @@ namespace Aritiafel.IlodarAcademy.SharpDX
             // Create an event handle to use for frame synchronization.
             fenceEvent = new AutoResetEvent(false);
         }
-        public void LoadAssets()
+        void LoadAssets()
         {
             // Create an empty root signature.
             var rootSignatureDesc = new RootSignatureDescription(RootSignatureFlags.AllowInputAssemblerInputLayout);
@@ -210,7 +223,7 @@ namespace Aritiafel.IlodarAcademy.SharpDX
                 PrimitiveTopologyType = PrimitiveTopologyType.Triangle,
                 RenderTargetCount = 1,
                 Flags = PipelineStateFlags.None,
-                SampleDescription = new SampleDescription(2, 0),
+                SampleDescription = new SampleDescription(1, 0),
                 StreamOutput = new StreamOutputDescription()
             };
             psoDesc.RenderTargetFormats[0] = Format.R8G8B8A8_UNorm;
@@ -246,8 +259,14 @@ namespace Aritiafel.IlodarAcademy.SharpDX
             viewport.MinDepth = Area.Viewport.MinDepth;
             viewport.MaxDepth = Area.Viewport.MaxDepth;
             commandList.SetViewport(viewport);
-            scissorRect.Right = (int)Area.Viewport.Width;
-            scissorRect.Bottom = (int)Area.Viewport.Height;            
+            //scissorRect.Left = 0;
+            //scissorRect.Top = 0;
+            scissorRect.X = 100;
+            scissorRect.Y = 100;
+            //scissorRect.Right = (int)Area.Viewport.Width + 1000;
+            //scissorRect.Bottom = (int)Area.Viewport.Height + 1000;
+            scissorRect.Width = 10600;
+            scissorRect.Height = 10600;
             commandList.SetScissorRectangles(scissorRect);
 
             // Indicate that the back buffer will be used as a render target.
@@ -274,7 +293,7 @@ namespace Aritiafel.IlodarAcademy.SharpDX
         /// <summary> 
         /// Wait the previous command list to finish executing. 
         /// </summary> 
-        public void WaitForPreviousFrame()
+        void WaitForPreviousFrame()
         {
             // WAITING FOR THE FRAME TO COMPLETE BEFORE CONTINUING IS NOT BEST PRACTICE. 
             // This is code implemented as such for simplicity. 
