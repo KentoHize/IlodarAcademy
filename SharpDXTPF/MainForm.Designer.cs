@@ -30,22 +30,34 @@
         private void InitializeComponent()
         {
             pibMain = new PictureBox();
+            btnRender = new Button();
             ((System.ComponentModel.ISupportInitialize)pibMain).BeginInit();
             SuspendLayout();
             // 
             // pibMain
             // 
-            pibMain.Location = new Point(1, 45);
+            pibMain.Location = new Point(1, 81);
             pibMain.Name = "pibMain";
-            pibMain.Size = new Size(1105, 563);
+            pibMain.Size = new Size(1621, 971);
             pibMain.TabIndex = 0;
             pibMain.TabStop = false;
+            // 
+            // btnRender
+            // 
+            btnRender.Location = new Point(1000, 43);
+            btnRender.Name = "btnRender";
+            btnRender.Size = new Size(73, 32);
+            btnRender.TabIndex = 1;
+            btnRender.Text = "Render";
+            btnRender.UseVisualStyleBackColor = true;
+            btnRender.Click += btnRender_Click;
             // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(9F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1105, 620);
+            ClientSize = new Size(1620, 1055);
+            Controls.Add(btnRender);
             Controls.Add(pibMain);
             Name = "MainForm";
             Text = "MainForm";
@@ -57,5 +69,6 @@
         #endregion
 
         private PictureBox pibMain;
+        private Button btnRender;
     }
 }

@@ -9,11 +9,21 @@ namespace Aritiafel.IlodarAcademy
 {
     public class Ar3DModel
     {
-        public Ar3DModel() {
-            Vector3 v3 = new Vector3(3, 2, 3);
+        public ArVertex[] Vertices { get; set; }
+        public Ar3DModel(List<ArVertex> vertices)
+            : this(vertices.ToArray())
+        { }
+
+        public Ar3DModel(ArVertex[] vertices)
+        {
+            Vertices = vertices;
+        }
+
+        public Ar3DModel()
+        {           
             
         }
+
         
-        //List<Vector3> 
     }
 }
