@@ -1,6 +1,6 @@
 ﻿namespace SharpDXTPF
 {
-    partial class Form1
+    partial class MainForm : Form
     {
         /// <summary>
         ///  Required designer variable.
@@ -11,6 +11,7 @@
         ///  Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        ///         
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -28,10 +29,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Form1";
+            components = new System.ComponentModel.Container();
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(800, 450);
+            Text = "MainForm";
         }
 
         #endregion
