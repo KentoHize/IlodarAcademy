@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Aritiafel.IlodarAcademy
 {
-    public class ArVertex
+    public struct ArVertex
     {
         public Vector3 Position { get; set; }
         public Vector4 Color { get; set; }
-
+        public static ArVertex Empty => new ArVertex(0, 0, 0, 0, 0, 0, 0);        
         public ArVertex(Vector3 position, Vector4 color)
             : this(position.X, position.Y, position.Z, color.X, color.Y, color.Z, color.W)
         { }

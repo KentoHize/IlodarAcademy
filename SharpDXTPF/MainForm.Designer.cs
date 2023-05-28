@@ -29,12 +29,33 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            pibMain = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)pibMain).BeginInit();
+            SuspendLayout();
+            // 
+            // pibMain
+            // 
+            pibMain.Location = new Point(1, 45);
+            pibMain.Name = "pibMain";
+            pibMain.Size = new Size(1105, 563);
+            pibMain.TabIndex = 0;
+            pibMain.TabStop = false;
+            // 
+            // MainForm
+            // 
+            AutoScaleDimensions = new SizeF(9F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(1105, 620);
+            Controls.Add(pibMain);
+            Name = "MainForm";
             Text = "MainForm";
+            Load += MainForm_Load;
+            ((System.ComponentModel.ISupportInitialize)pibMain).EndInit();
+            ResumeLayout(false);
         }
 
         #endregion
+
+        private PictureBox pibMain;
     }
 }

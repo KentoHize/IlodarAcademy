@@ -1,3 +1,4 @@
+
 namespace SharpDXTPF
 {
     public partial class MainForm : Form
@@ -6,5 +7,11 @@ namespace SharpDXTPF
         {
             InitializeComponent();
         }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }
