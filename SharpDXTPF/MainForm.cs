@@ -30,14 +30,13 @@ namespace SharpDXTPF
             model2.Vertices[1] = new ArVertex(-3, -4, 0, Color.Red);
             model2.Vertices[2] = new ArVertex(-3, 0, 0, Color.Green);
             area = new Ar3DArea();
+            area.BackgroudColor = Color.Black;
             area.Models = new Ar3DModel[] { model, model2 };
             area.Viewport = new ArViewport(0, 0, pibMain.ClientSize.Width, pibMain.ClientSize.Height);
 
 
-            sde = new SharpDXEngine();
-            sde.Area = area;
-            sde.Handle = pibMain.Handle;
-            sde.Load();            
+            sde = new SharpDXEngine();            
+            sde.Load(area, pibMain.Handle);            
             sde.Render();
         }
 
@@ -91,17 +90,12 @@ namespace SharpDXTPF
                     area.Viewport = new ArViewport(area.Viewport.X + 10, area.Viewport.Y, area.Viewport.Width, area.Viewport.Height, area.Viewport.MinDepth, area.Viewport.MaxDepth);
                     break;
                 case 'x':
-                    area.Models[0].Vertices[0].Color = new System.Numerics.Vector4(area.Models[0].Vertices[0].Color.X + 10);
+                    area.Models[0].Vertices[0].Color = Color.FromArgb(area.Models[0].Vertices[0].Color.R + 10);
                     sde.Flush();
                     break;
             }
             sde.Render();
         }
-
-        //private void MainForm_KeyDown(object sender, KeyEventArgs e)
-        //{
-        //    MessageBox.Show("Key Down");
-        //}
 
         private void pibMain_MouseClick(object sender, MouseEventArgs e)
         {

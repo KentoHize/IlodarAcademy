@@ -9,13 +9,15 @@ using Resource = SharpDX.Direct3D12.Resource;
 using ShaderBytecodeDC = SharpDX.D3DCompiler.ShaderBytecode;
 using ShaderBytecodeD12 = SharpDX.Direct3D12.ShaderBytecode;
 using System.Reflection.Metadata;
+using System.Reflection;
 
 namespace Aritiafel.IlodarAcademy.SharpDX
 {
     
     public class SharpDXEngine
     {
-        public const string ShaderSLFile = "C:\\Programs\\IlodarAcademy\\IlodarAcademy\\SharpDX\\shaders.hlsl";
+        //public string ShaderSLFile { get; set; } =  Path.Combine(Environment.CurrentDirectory, "shaders.hlsl");
+        public string ShaderSLFile { get; set; } = @"C:\Programs\IlodarAcademy\IlodarAcademy\bin\Debug\net7.0\shaders.hlsl";
         public Ar3DArea? Area { get; set; }
         public IntPtr Handle { get; set; }
         public ArSwapEffect SwapEffect { get; set; } = ArSwapEffect.FlipDiscard;
@@ -44,8 +46,10 @@ namespace Aritiafel.IlodarAcademy.SharpDX
         int fenceValue;
         int frameIndex;
 
-        public void Load()
-        {
+        public void Load(Ar3DArea? area = null, IntPtr? handle = null)
+        {   
+            Area = area;
+            Handle = (IntPtr)handle;
             LoadPipeline();
             LoadAssets();
         }
@@ -250,23 +254,20 @@ namespace Aritiafel.IlodarAcademy.SharpDX
             commandList.Reset(commandAllocator, pipelineState);
 
 
-            // Set necessary state.
-            commandList.SetGraphicsRootSignature(rootSignature);
-            viewport.X = Area.Viewport.X;
-            viewport.Y = Area.Viewport.Y;
+            commandList.SetGraphicsRootSignature(rootSignature);            
+            //Viewport
+            viewport.X = Area.Viewport.X + 150;
+            viewport.Y = Area.Viewport.Y + 150;
             viewport.Width = Area.Viewport.Width;
             viewport.Height = Area.Viewport.Height;
             viewport.MinDepth = Area.Viewport.MinDepth;
             viewport.MaxDepth = Area.Viewport.MaxDepth;
-            commandList.SetViewport(viewport);
-            //scissorRect.Left = 0;
-            //scissorRect.Top = 0;
-            scissorRect.X = 100;
-            scissorRect.Y = 100;
-            //scissorRect.Right = (int)Area.Viewport.Width + 1000;
-            //scissorRect.Bottom = (int)Area.Viewport.Height + 1000;
-            scissorRect.Width = 10600;
-            scissorRect.Height = 10600;
+            commandList.SetViewport(viewport);            
+            //Scrissor自動設定
+            scissorRect.X = 0;
+            scissorRect.Y = 0;
+            scissorRect.Width = (int)Area.Viewport.Width + 1;
+            scissorRect.Height = (int)Area.Viewport.Height + 1;
             commandList.SetScissorRectangles(scissorRect);
 
             // Indicate that the back buffer will be used as a render target.
@@ -277,10 +278,9 @@ namespace Aritiafel.IlodarAcademy.SharpDX
             commandList.SetRenderTargets(rtvHandle, null);
 
             // Record commands.
-            commandList.ClearRenderTargetView(rtvHandle, new Color4(Area.BackgroudColor.ToArgb()), 0, null);
+            commandList.ClearRenderTargetView(rtvHandle, Area.BackgroudColor.ToSharpDXColor4(), 0, null);
             for(long i = 0; i < bundles.LongLength; i++)
                 commandList.ExecuteBundle(bundles[i]);
-
             
             //commandList.ExecuteBundle(bundles[1]);
             // Indicate that the back buffer will now be used to present.
