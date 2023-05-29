@@ -12,7 +12,7 @@ namespace Aritiafel.IlodarAcademy
         public static ArVertex TraslateTransform(ArVertex av, Vector3 vector)
         {
             av.Position = new Vector3(av.Position.X + vector.X, av.Position.Y + vector.Y, av.Position.Z + vector.Z);
-            return av;            
+            return av;
         }
 
         public static ArVertex RotateTransform(ArVertex av, Vector3 vector)
@@ -78,9 +78,9 @@ namespace Aritiafel.IlodarAcademy
                     for (int k = 0; k < area.Models[i].Planes[j].Vertices.Length; k++)
                     {
                         vertices.Add(area.Models[i].Planes[j].Vertices[k]);
-                        AmplificationTransform(vertices[vertices.Count - 1], area.AmplificationFactor);
-                        RotateTransform(vertices[vertices.Count - 1], area.RotationTransform);
-                        TraslateTransform(vertices[vertices.Count - 1], area.TranslateTransform);
+                        vertices[vertices.Count - 1] = AmplificationTransform(vertices[vertices.Count - 1], area.AmplificationFactor);
+                        vertices[vertices.Count - 1] = RotateTransform(vertices[vertices.Count - 1], area.RotationTransform);
+                        vertices[vertices.Count - 1] = TraslateTransform(vertices[vertices.Count - 1], area.TranslateTransform);
                     }
                     result[index++] = vertices.ToArray();                    
                 }
