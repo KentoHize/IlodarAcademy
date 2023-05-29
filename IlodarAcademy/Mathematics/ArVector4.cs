@@ -9,9 +9,8 @@ namespace Aritiafel.Organizations.RaeriharUniversity
     public struct ArVector4
     {
         double[] _data = new double[4];
-
-        public static ArVector4 Zero = new ArVector4();
-        public static ArVector4 One = new ArVector4(1, 1, 1, 1);
+        public static ArVector4 Zero { get => new ArVector4(); }
+        public static ArVector4 One { get => new ArVector4(1, 1, 1, 1); }
         public ArVector4()
         { }
 

@@ -11,8 +11,8 @@ namespace Aritiafel.Organizations.RaeriharUniversity
     {
         double[,] _data;
 
-        public static ArMatrix33 Zero = new ArMatrix33();
-        public static ArMatrix33 One = new ArMatrix33(1, 0, 0, 0, 1, 0, 0, 0, 1);
+        public static ArMatrix33 Zero { get => new ArMatrix33(); }
+        public static ArMatrix33 One { get => new ArMatrix33(1, 0, 0, 0, 1, 0, 0, 0, 1); }
 
         public ArMatrix33()
         { 

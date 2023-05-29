@@ -12,8 +12,8 @@ namespace Aritiafel.Organizations.RaeriharUniversity
     {
         double[] _data = new double[3];
 
-        public static ArVector3 Zero = new ArVector3();
-        public static ArVector3 One = new ArVector3(1, 1, 1);
+        public static ArVector3 Zero { get => new ArVector3(); }
+        public static ArVector3 One { get => new ArVector3(1, 1, 1); }
         public ArVector3()
         { }
 

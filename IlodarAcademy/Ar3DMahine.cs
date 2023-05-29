@@ -57,7 +57,7 @@ namespace Aritiafel.IlodarAcademy
 
         public static ArVector3 MultiplyTransformMatrix(ArVector3 position, ArMatrix44 transformMatrix)
         {
-            ArVector4 v4 = new ArVector4(position[0], position[1], position[2], 1) * transformMatrix;            
+            ArVector4 v4 = transformMatrix * new ArVector4(position[0], position[1], position[2], 1);
             return new ArVector3(v4[0], v4[1], v4[2]);
         }
 
@@ -68,7 +68,6 @@ namespace Aritiafel.IlodarAcademy
             result[0, 0] = result[0, 0] * scaleVector[0];
             result[1, 1] = result[1, 1] * scaleVector[1];
             result[2, 2] = result[2, 2] * scaleVector[2];
-            Debug.WriteLine(result);
             //Rotate            
             double cos = Math.Cos(rotateVector[0]);
             double sin = Math.Sin(rotateVector[0]);
@@ -91,15 +90,10 @@ namespace Aritiafel.IlodarAcademy
                 0, cos, sin * -1, 0,
                 0, sin, cos, 0,
                 0, 0, 0, 1);
-            Debug.WriteLine(result);
             //Translate
-            //result[0, 3] = result[0, 3] + translateVector[0];
-            //result[1, 3] = result[1, 3] + translateVector[1];
-            //result[2, 3] = result[2, 3] + translateVector[2];
-            result[3, 0] = result[3, 0] + translateVector[0];
-            result[3, 1] = result[3, 1] + translateVector[1];
-            result[3, 2] = result[3, 2] + translateVector[2];
-            Debug.WriteLine(result);
+            result[0, 3] = result[0, 3] + translateVector[0];
+            result[1, 3] = result[1, 3] + translateVector[1];
+            result[2, 3] = result[2, 3] + translateVector[2];
             return result;
         }
 

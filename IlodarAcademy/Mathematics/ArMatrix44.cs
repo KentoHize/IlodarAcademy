@@ -10,9 +10,8 @@ namespace Aritiafel.Organizations.RaeriharUniversity
     public struct ArMatrix44
     {
         double[,] _data;
-
-        public static ArMatrix44 Zero = new ArMatrix44();
-        public static ArMatrix44 One = new ArMatrix44(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        public static ArMatrix44 Zero { get => new ArMatrix44(); }
+        public static ArMatrix44 One { get => new ArMatrix44(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
 
         public ArMatrix44()
         {
@@ -60,6 +59,15 @@ namespace Aritiafel.Organizations.RaeriharUniversity
                 a[1] * b[0, 1] + a[1] * b[1, 1] + a[1] * b[2, 1] + a[1] * b[3, 1],
                 a[2] * b[0, 2] + a[2] * b[1, 2] + a[2] * b[2, 2] + a[2] * b[3, 2],
                 a[3] * b[0, 3] + a[3] * b[1, 3] + a[3] * b[2, 3] + a[3] * b[3, 3]);
+        }
+
+        public static ArVector4 operator *(ArMatrix44 a, ArVector4 b)
+        {
+            return new ArVector4(
+                a[0, 0] * b[0] + a[0, 1] * b[1] + a[0, 2] * b[2] + a[0, 3] * b[3],
+                a[1, 0] * b[0] + a[1, 1] * b[1] + a[1, 2] * b[2] + a[1, 3] * b[3],
+                a[2, 0] * b[0] + a[2, 1] * b[1] + a[2, 2] * b[2] + a[2, 3] * b[3],
+                a[3, 0] * b[0] + a[3, 1] * b[1] + a[3, 2] * b[2] + a[3, 3] * b[3]);
         }
 
         public static ArMatrix44 operator *(ArMatrix44 a, ArMatrix44 b)
