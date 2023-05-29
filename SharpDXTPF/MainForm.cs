@@ -1,6 +1,7 @@
 using Aritiafel.IlodarAcademy.SharpDX;
 using Aritiafel.IlodarAcademy;
 using System.Numerics;
+using Aritiafel.Organizations.RaeriharUniversity;
 
 namespace SharpDXTPF
 {
@@ -37,10 +38,10 @@ namespace SharpDXTPF
             
             area = new Ar3DArea();
             area.BackgroudColor = Color.Black;
-            area.Models = new Ar3DModel[] { model, model2 };            
-            area.ScaleTransform = 1;
-            area.TranslateTransform = new Vector3(0, 0, 0);
-            //area.TranslateTransform = new Vector3(0.5f, 0.5f, 0);
+            area.Models = new Ar3DModel[] { model, model2 };
+            area.ScaleTransform = ArVector3.One;
+            area.RotateTransform = ArVector3.Zero;
+            area.TranslateTransform = ArVector3.Zero;
 
             sde = new SharpDXEngine();
             SharpDXSetting setting = new SharpDXSetting
@@ -82,44 +83,50 @@ namespace SharpDXTPF
             {
                 case 'q':
                     //viewport = new ArViewport(viewport.X, viewport.Y, viewport.Width, viewport.Height, viewport.MinDepth, viewport.MaxDepth + 10);
-                    area.RotateTransform += new Vector3(10, 0, 0);
+                    area.RotateTransform += new ArVector3(0.1, 0, 0);
                     break;
                 case 'e':
-                    area.RotateTransform += new Vector3(-10, 0, 0);
+                    area.RotateTransform += new ArVector3(-0.1, 0, 0);
                     //viewport = new ArViewport(viewport.X, viewport.Y, viewport.Width, viewport.Height, viewport.MinDepth, viewport.MaxDepth - 10);
                     break;
                 case 'y':
-                    //viewport = new ArViewport(viewport.X, viewport.Y, viewport.Width, viewport.Height - 10, viewport.MinDepth, viewport.MaxDepth);
-                    
+                    //viewport = new ArViewport(viewport.X, viewport.Y, viewport.Width, viewport.Height - 10, viewport.MinDepth, viewport.MaxDepth);                    
                     break;
                 case 'h':
-                    viewport = new ArViewport(viewport.X, viewport.Y, viewport.Width, viewport.Height + 10, viewport.MinDepth, viewport.MaxDepth);
+                    //viewport = new ArViewport(viewport.X, viewport.Y, viewport.Width, viewport.Height + 10, viewport.MinDepth, viewport.MaxDepth);
                     break;
                 case 'g':
-                    viewport = new ArViewport(viewport.X, viewport.Y, viewport.Width - 10, viewport.Height, viewport.MinDepth, viewport.MaxDepth);
+                    //viewport = new ArViewport(viewport.X, viewport.Y, viewport.Width - 10, viewport.Height, viewport.MinDepth, viewport.MaxDepth);
                     break;
                 case 'j':
-                    viewport = new ArViewport(viewport.X, viewport.Y, viewport.Width + 10, viewport.Height, viewport.MinDepth, viewport.MaxDepth);
+                    //viewport = new ArViewport(viewport.X, viewport.Y, viewport.Width + 10, viewport.Height, viewport.MinDepth, viewport.MaxDepth);
                     break;
                 case 'w':
                     //viewport = new ArViewport(viewport.X, viewport.Y - 10, viewport.Width, viewport.Height, viewport.MinDepth, viewport.MaxDepth);
-                    area.TranslateTransform += new Vector3(0, 0.1f, 0);
+                    area.TranslateTransform += new ArVector3(0, 0.1f, 0);
                     break;
                 case 's':
-                    area.TranslateTransform += new Vector3(0, -0.1f, 0);
+                    area.TranslateTransform += new ArVector3(0, -0.1f, 0);
                     //viewport = new ArViewport(viewport.X, viewport.Y + 10, viewport.Width, viewport.Height, viewport.MinDepth, viewport.MaxDepth);
                     break;
                 case 'a':
-                    area.TranslateTransform += new Vector3(-0.1f, 0, 0);
+                    area.TranslateTransform += new ArVector3(-0.1f, 0, 0);
                     //viewport = new ArViewport(viewport.X - 10, viewport.Y, viewport.Width, viewport.Height, viewport.MinDepth, viewport.MaxDepth);
                     break;
                 case 'd':
-                    area.TranslateTransform += new Vector3(0.1f, 0, 0);
+                    area.TranslateTransform += new ArVector3(0.1f, 0, 0);
                     //viewport = new ArViewport(viewport.X + 10, viewport.Y, viewport.Width, viewport.Height, viewport.MinDepth, viewport.MaxDepth);
                     break;
                 case 'x':
                     //area.Models[0].Vertices[0].Color = Color.FromArgb(area.Models[0].Vertices[0].Color.R + 10);
                     sde.Flush();
+                    break;
+                case 'z':
+                    area.ScaleTransform += new ArVector3(1, 1, 1);
+                    break;
+                case 'c':
+                    if(area.ScaleTransform != ArVector3.One)
+                        area.ScaleTransform -= new ArVector3(1, 1, 1);
                     break;
             }
             Upload();

@@ -56,9 +56,9 @@ namespace Aritiafel.Organizations.RaeriharUniversity
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();            
-            sb.AppendFormat("{{0} {1} {2}}\n", _data[0, 0], _data[0, 1], _data[0, 2]);
-            sb.AppendFormat("{{0} {1} {2}}\n", _data[1, 0], _data[1, 1], _data[1, 2]);
-            sb.AppendFormat("{{0} {1} {2}}", _data[2, 0], _data[2, 1], _data[2, 2]);
+            sb.AppendFormat("{{{0} {1} {2}}}\n", _data[0, 0], _data[0, 1], _data[0, 2]);
+            sb.AppendFormat("{{{0} {1} {2}}}\n", _data[1, 0], _data[1, 1], _data[1, 2]);
+            sb.AppendFormat("{{{0} {1} {2}}}", _data[2, 0], _data[2, 1], _data[2, 2]);
             return sb.ToString();
         }
     }

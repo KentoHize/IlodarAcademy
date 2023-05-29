@@ -56,20 +56,20 @@ namespace Aritiafel.IlodarAcademy.SharpDX
                     setting.Viewport.Width, setting.Viewport.Height,
                     setting.Viewport.MinDepth, setting.Viewport.MaxDepth);
             LoadPipeline();
+            LoadAssets();
         }
 
         public void Load(SharpDXData data)
         {
             Data = data.GraphicData.ToSharpDXVerticesArray();
             BackgroundColor = data.BackgroundColor.ToSharpDXColor4();
-            LoadAssets();
+            Flush();
         }
        
         public void Flush()
         {
             LoadAssets2();            
         }
-
 
         void LoadPipeline()
         {
@@ -227,7 +227,7 @@ namespace Aritiafel.IlodarAcademy.SharpDX
             commandList = device.CreateCommandList(CommandListType.Direct, commandAllocator, pipelineState);
             commandList.Close();
 
-            LoadAssets2();
+            //LoadAssets2();
         }
 
         public void PopulateCommandList()

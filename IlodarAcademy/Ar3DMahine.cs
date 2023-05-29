@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
 using Aritiafel.Organizations.RaeriharUniversity;
+using System.Diagnostics;
 
 namespace Aritiafel.IlodarAcademy
 {
@@ -67,13 +68,38 @@ namespace Aritiafel.IlodarAcademy
             result[0, 0] = result[0, 0] * scaleVector[0];
             result[1, 1] = result[1, 1] * scaleVector[1];
             result[2, 2] = result[2, 2] * scaleVector[2];
-            //Rotate
+            Debug.WriteLine(result);
+            //Rotate            
             double cos = Math.Cos(rotateVector[0]);
             double sin = Math.Sin(rotateVector[0]);
-            result
-            rotateVector[0]
+            result = result * new ArMatrix44(
+                cos, sin * -1, 0, 0,
+                sin, cos, 0, 0,
+                0, 0, 1, 0,
+                0 ,0 ,0, 1);
+            cos = Math.Cos(rotateVector[1]);
+            sin = Math.Sin(rotateVector[1]);
+            result = result * new ArMatrix44(
+                cos, 0, sin * -1, 0,
+                0, 1, 0, 0,
+                sin, 0, cos, 0,
+                0, 0, 0, 1);
+            cos = Math.Cos(rotateVector[2]);
+            sin = Math.Sin(rotateVector[2]);
+            result = result * new ArMatrix44(
+                1, 0, 0, 0,
+                0, cos, sin * -1, 0,
+                0, sin, cos, 0,
+                0, 0, 0, 1);
+            Debug.WriteLine(result);
             //Translate
-
+            //result[0, 3] = result[0, 3] + translateVector[0];
+            //result[1, 3] = result[1, 3] + translateVector[1];
+            //result[2, 3] = result[2, 3] + translateVector[2];
+            result[3, 0] = result[3, 0] + translateVector[0];
+            result[3, 1] = result[3, 1] + translateVector[1];
+            result[3, 2] = result[3, 2] + translateVector[2];
+            Debug.WriteLine(result);
             return result;
         }
 
@@ -93,6 +119,7 @@ namespace Aritiafel.IlodarAcademy
                 throw new NullReferenceException(nameof(area.Models));
             ArVertex[][] result = new ArVertex[PlaneCount(area)][];
             ArMatrix44 transformMatrix = ProduceTransformMatrix(area.TranslateTransform, area.RotateTransform, area.ScaleTransform);
+            
             long index = 0;
             for(long i = 0; i < area.Models.Length; i++)
             {

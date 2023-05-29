@@ -56,10 +56,10 @@ namespace Aritiafel.Organizations.RaeriharUniversity
         public static ArVector4 operator *(ArVector4 a, ArMatrix44 b)
         {
             return new ArVector4(
-                a[0] * b[0, 0] + a[0] * b[0, 1] + a[0] * b[0, 2] + a[0] * b[0, 3],
-                a[1] * b[1, 0] + a[1] * b[1, 1] + a[1] * b[1, 2] + a[1] * b[1, 3],
-                a[2] * b[2, 0] + a[2] * b[2, 1] + a[2] * b[2, 2] + a[2] * b[2, 3],
-                a[3] * b[3, 0] + a[3] * b[3, 1] + a[3] * b[3, 2] + a[3] * b[3, 3]);
+                a[0] * b[0, 0] + a[0] * b[1, 0] + a[0] * b[2, 0] + a[0] * b[3, 0],
+                a[1] * b[0, 1] + a[1] * b[1, 1] + a[1] * b[2, 1] + a[1] * b[3, 1],
+                a[2] * b[0, 2] + a[2] * b[1, 2] + a[2] * b[2, 2] + a[2] * b[3, 2],
+                a[3] * b[0, 3] + a[3] * b[1, 3] + a[3] * b[2, 3] + a[3] * b[3, 3]);
         }
 
         public static ArMatrix44 operator *(ArMatrix44 a, ArMatrix44 b)
@@ -80,10 +80,10 @@ namespace Aritiafel.Organizations.RaeriharUniversity
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("{{0} {1} {2} {3}}\n", _data[0, 0], _data[0, 1], _data[0, 2], _data[0, 3]);
-            sb.AppendFormat("{{0} {1} {2} {3}}\n", _data[1, 0], _data[1, 1], _data[1, 2], _data[1, 3]);
-            sb.AppendFormat("{{0} {1} {2} {3}}\n", _data[2, 0], _data[2, 1], _data[2, 2], _data[2, 3]);
-            sb.AppendFormat("{{0} {1} {2} {3}}", _data[3, 0], _data[3, 1], _data[3, 2], _data[3, 3]);
+            sb.AppendFormat("{{{0} {1} {2} {3}}}\n", _data[0, 0], _data[0, 1], _data[0, 2], _data[0, 3]);
+            sb.AppendFormat("{{{0} {1} {2} {3}}}\n", _data[1, 0], _data[1, 1], _data[1, 2], _data[1, 3]);
+            sb.AppendFormat("{{{0} {1} {2} {3}}}\n", _data[2, 0], _data[2, 1], _data[2, 2], _data[2, 3]);
+            sb.AppendFormat("{{{0} {1} {2} {3}}}", _data[3, 0], _data[3, 1], _data[3, 2], _data[3, 3]);
             return sb.ToString();
         }
     }

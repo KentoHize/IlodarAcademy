@@ -41,5 +41,9 @@ namespace Aritiafel.Organizations.RaeriharUniversity
         public static ArVector4 operator /(ArVector4 a, double b)
             => new ArVector4(a._data[0] / b, a._data[1] / b, a._data[2] / b, a._data[3] / b);
 
+        public static bool operator ==(ArVector4 a, ArVector4 b)
+           => a._data[0] == b._data[0] && a._data[1] == b._data[1] && a._data[2] == b._data[2] && a._data[3] == b._data[3];
+        public static bool operator !=(ArVector4 a, ArVector4 b)
+            => !(a == b);
     }
 }
