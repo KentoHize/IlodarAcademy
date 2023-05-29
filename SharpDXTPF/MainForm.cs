@@ -21,24 +21,25 @@ namespace SharpDXTPF
         {
             Ar3DModel model = new Ar3DModel();
             model.Planes = new ArPlane[1];
-
             ArVertex[] vertices = new ArVertex[3];
             vertices[0] = new ArVertex(1000, 1000, 0, Color.Red);
-            vertices[1] = new ArVertex(1000, 0, 0, Color.Green);
-            vertices[2] = new ArVertex(0, 1000, 0, Color.Blue);
+            vertices[2] = new ArVertex(1000, 0, 0, Color.Green);
+            vertices[1] = new ArVertex(0, 1000, 0, Color.Blue);
             model.Planes[0] = new ArPlane(vertices);
 
             Ar3DModel model2 = new Ar3DModel();
             model2.Planes = new ArPlane[1];
             vertices = new ArVertex[3];
             vertices[0] = new ArVertex(0, 0, 0, Color.Red);
-            vertices[1] = new ArVertex(1000, -4000, 0, Color.Green);
-            vertices[2] = new ArVertex(-3000, 0, 0, Color.Blue);
+            vertices[1] = new ArVertex(1000, -2000, 0, Color.Green);
+            vertices[2] = new ArVertex(1000, 0, 0, Color.Blue);
             model2.Planes[0] = new ArPlane(vertices);
 
             area = new Ar3DArea();
             area.BackgroudColor = Color.Black;
             area.Models = new Ar3DModel[] { model, model2 };
+            //area.Models = new Ar3DModel[] { model2 };
+            //area.Models = new Ar3DModel[] { model };
             area.ScaleTransform = ArVector3.One;
             area.RotateTransform = ArVector3.Zero;
             area.TranslateTransform = ArVector3.Zero;
@@ -106,16 +107,16 @@ namespace SharpDXTPF
                     //viewport = new ArViewport(viewport.X, viewport.Y, viewport.Width, viewport.Height, viewport.MinDepth, viewport.MaxDepth - 10);
                     break;
                 case 'y':
-                    //viewport = new ArViewport(viewport.X, viewport.Y, viewport.Width, viewport.Height - 10, viewport.MinDepth, viewport.MaxDepth);                    
+                    area.RotateTransform += new ArVector3(0, 0.1, 0);
                     break;
                 case 'h':
-                    //viewport = new ArViewport(viewport.X, viewport.Y, viewport.Width, viewport.Height + 10, viewport.MinDepth, viewport.MaxDepth);
+                    area.RotateTransform += new ArVector3(0, -0.1, 0);
                     break;
                 case 'g':
-                    //viewport = new ArViewport(viewport.X, viewport.Y, viewport.Width - 10, viewport.Height, viewport.MinDepth, viewport.MaxDepth);
+                    area.RotateTransform += new ArVector3(0, 0, -0.1);
                     break;
                 case 'j':
-                    //viewport = new ArViewport(viewport.X, viewport.Y, viewport.Width + 10, viewport.Height, viewport.MinDepth, viewport.MaxDepth);
+                    area.RotateTransform += new ArVector3(0, 0, 0.1);
                     break;
                 case 'w':
                     //viewport = new ArViewport(viewport.X, viewport.Y - 10, viewport.Width, viewport.Height, viewport.MinDepth, viewport.MaxDepth);
@@ -164,10 +165,15 @@ namespace SharpDXTPF
             model.Planes = new ArPlane[1];
 
             ArVertex[] vertices = new ArVertex[4];
-            vertices[0] = new ArVertex(1000, 1000, 0, Color.White);
-            vertices[1] = new ArVertex(1000, 0, 0, Color.White);            
-            vertices[3] = new ArVertex(0, 0, 0, Color.White);
-            vertices[2] = new ArVertex(0, 1000, 0, Color.White);
+            //vertices[0] = new ArVertex(1000, 1000, 0, Color.White);
+            //vertices[1] = new ArVertex(1000, 0, 0, Color.White);            
+            //vertices[3] = new ArVertex(0, 0, 0, Color.White);
+            //vertices[2] = new ArVertex(0, 1000, 0, Color.White);
+
+            vertices[0] = new ArVertex(0, 0, 0, Color.White);
+            vertices[1] = new ArVertex(1000, 0, 0, Color.White);
+            vertices[2] = new ArVertex(1000, 1000, 0, Color.White);
+            vertices[3] = new ArVertex(0, 1000, 0, Color.White);
             model.Planes[0] = new ArPlane(vertices);
             area.Models = new Ar3DModel[] { model };
             Upload();
