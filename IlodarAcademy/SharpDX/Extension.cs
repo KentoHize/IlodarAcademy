@@ -42,5 +42,17 @@ namespace Aritiafel.IlodarAcademy.SharpDX
                 result[i] = vs[i].ToSharpDXVertex();
             return result;
         }
+
+        public static Vertex[][] ToSharpDXVerticesArray(this ArVertex[][] a)
+        {
+            Vertex[][] result = new Vertex[a.GetLength(0)][];
+            for(long i = 0; i < a.Length; i++)
+            {
+                result[i] = new Vertex[a[i].Length];
+                for (int j = 0; j < a[i].Length; j++)
+                    result[i][j] = a[i][j].ToSharpDXVertex();
+            }
+            return result;
+        }
     }
 }

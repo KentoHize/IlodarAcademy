@@ -35,8 +35,6 @@ namespace Aritiafel.IlodarAcademy
         {
             Position = new Vector3(x, y, z);
             Color = color;
-        }
-
-        
+        }        
     }
 }

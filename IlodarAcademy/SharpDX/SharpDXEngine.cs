@@ -12,14 +12,13 @@ using SharpDX.Mathematics;
 
 namespace Aritiafel.IlodarAcademy.SharpDX
 {
-    
+
     public class SharpDXEngine
     {
         //public string ShaderSLFile { get; set; } =  Path.Combine(Environment.CurrentDirectory, "shaders.hlsl");
-        public string ShaderSLFile { get; set; } = @"C:\Programs\IlodarAcademy\IlodarAcademy\bin\Debug\net7.0\shaders.hlsl";
-        public Ar3DArea? Area { get; set; }
-        public IntPtr Handle { get; set; }
-        public ArSwapEffect SwapEffect { get; set; } = ArSwapEffect.FlipDiscard;
+        public string ShaderSLFile { get; set; } = @"C:\Programs\IlodarAcademy\IlodarAcademy\bin\Debug\net7.0\shaders.hlsl";        
+        public SharpDXData Data { get; private set; }
+        public SharpDXSetting Setting { get; private set; }       
 
         ViewportF viewport;
         Rectangle scissorRect;
@@ -46,13 +45,34 @@ namespace Aritiafel.IlodarAcademy.SharpDX
         int frameIndex;
         //Matrix m = Matrix.Identity;
 
-        public void Load(Ar3DArea? area = null, IntPtr? handle = null)
-        {   
-            Area = area;
-            Handle = (IntPtr)handle;
+        public void Initialize(SharpDXSetting setting)
+        {
+            Setting = setting;
             LoadPipeline();
+        }
+
+        //public void Load(SharpDXSetting setting, SharpDXData? data = null)
+        //{
+        //    Setting = setting;
+        //    if(data != null)
+        //        Data = data;
+        //    //LoadPipeline();
+        //    LoadAssets();
+        //}
+
+        public void Load(SharpDXData data)
+        {
+            Data = data;
             LoadAssets();
         }
+
+        //public void Load(Ar3DArea? area = null, IntPtr? handle = null)
+        //{   
+        //    Area = area;
+        //    Handle = (IntPtr)handle;
+        //    LoadPipeline();
+        //    LoadAssets();
+        //}
 
         public void Flush()
         {
@@ -62,7 +82,7 @@ namespace Aritiafel.IlodarAcademy.SharpDX
 
         void LoadPipeline()
         {
-            if (Area == null || Handle == nint.Zero)
+            if (Setting == null || Data == null)
                 return;
 
             viewport.X = Area.Viewport.X;
@@ -134,17 +154,18 @@ namespace Aritiafel.IlodarAcademy.SharpDX
 
             // Define the geometry for a triangle.
 
-            bundles = new GraphicsCommandList[Area.Models.LongLength];
-            bundleAllocators = new CommandAllocator[Area.Models.LongLength];
-            for (long i = 0; i < bundles.LongLength; i++)
+            bundles = new GraphicsCommandList[Area.Models.Length];
+            bundleAllocators = new CommandAllocator[Area.Models.Length];
+            for (int i = 0; i < bundles.Length; i++)
             {
-                var aModel = Area.Models[i].ToSharpDXModel();
+                Vertex[] aModel;
+                aModel = Area.Models[i].ToSharpDXModel();
                 int vertexBufferSize = Utilities.SizeOf(aModel);
                 // Note: using upload heaps to transfer static data like vert buffers is not 
                 // recommended. Every time the GPU needs it, the upload heap will be marshalled 
                 // over. Please read up on Default Heap usage. An upload heap is used here for 
                 // code simplicity and because there are very few verts to actually transfer.
-                vertexBuffer = device.CreateCommittedResource(new HeapProperties(HeapType.Default), HeapFlags.None, ResourceDescription.Buffer(vertexBufferSize), ResourceStates.GenericRead);
+                vertexBuffer = device.CreateCommittedResource(new HeapProperties(HeapType.Upload), HeapFlags.None, ResourceDescription.Buffer(vertexBufferSize), ResourceStates.GenericRead);
 
                 // Copy the triangle data to the vertex buffer.
                 IntPtr pVertexDataBegin = vertexBuffer.Map(0);
@@ -163,7 +184,7 @@ namespace Aritiafel.IlodarAcademy.SharpDX
                 bundles[i].SetGraphicsRootSignature(rootSignature);
                 bundles[i].PrimitiveTopology = PrimitiveTopology.TriangleList;
                 bundles[i].SetVertexBuffer(0, vertexBufferView);
-                bundles[i].DrawInstanced(Area.Models[i].Vertices.Length, 1, 0, 0);
+                bundles[i].DrawInstanced(Area.Models[i].Planes[0].Vertices.Length, 1, 0, 0);
                 bundles[i].Close();
             }
 
@@ -173,9 +194,6 @@ namespace Aritiafel.IlodarAcademy.SharpDX
             //        new Vertex() {Position=new Vector3(0.25f, -0.25f * aspectRatio, 0.0f),Color=new Vector4(0.0f, 1.0f, 0.0f, 1.0f) },
             //        new Vertex() {Position=new Vector3(-0.25f, -0.25f * aspectRatio, 0.0f),Color=new Vector4(0.0f, 0.0f, 1.0f, 1.0f ) },
             //};
-
-
-
 
             // Create synchronization objects.
             fence = device.CreateFence(0, FenceFlags.None);
