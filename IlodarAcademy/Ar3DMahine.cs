@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
+using Aritiafel.Organizations.RaeriharUniversity;
 
 namespace Aritiafel.IlodarAcademy
 {
@@ -53,6 +54,12 @@ namespace Aritiafel.IlodarAcademy
         //    return new Point(p.X / amplificationFactor, p.Y / amplificationFactor);
         //}
 
+        public static ArMatrix33 ProduceTransformMatrix(ArVector3 translateVector, ArVector3 rotateVector, double amplificationFactor = 1)
+        {
+            ArMatrix33 matrix = ArMatrix33.One;
+            matrix[0] translateVector
+        }
+
         public static long PlaneCount(Ar3DArea area)
         {
             if (area.Models == null)
@@ -63,12 +70,12 @@ namespace Aritiafel.IlodarAcademy
             return result;
         }
 
-
         public static ArVertex[][] ProduceDrawingVertices(Ar3DArea area)
         {
             if (area.Models == null)
                 throw new NullReferenceException(nameof(area.Models));
             ArVertex[][] result = new ArVertex[PlaneCount(area)][];
+            ArMatrix33 transformMatrix = ProduceTransformMatrix(area.TranslateTransform, area.RotateTransform, area.AmplificationFactor);
             long index = 0;
             for(long i = 0; i < area.Models.Length; i++)
             {
@@ -77,10 +84,8 @@ namespace Aritiafel.IlodarAcademy
                     List<ArVertex> vertices = new List<ArVertex>();
                     for (int k = 0; k < area.Models[i].Planes[j].Vertices.Length; k++)
                     {
-                        vertices.Add(area.Models[i].Planes[j].Vertices[k]);
-                        vertices[vertices.Count - 1] = AmplificationTransform(vertices[vertices.Count - 1], area.AmplificationFactor);
-                        vertices[vertices.Count - 1] = RotateTransform(vertices[vertices.Count - 1], area.RotationTransform);
-                        vertices[vertices.Count - 1] = TraslateTransform(vertices[vertices.Count - 1], area.TranslateTransform);
+                        vertices.Add(new ArVertex(area.Models[i].Planes[j].Vertices[k].Position * transformMatrix,
+                            area.Models[i].Planes[j].Vertices[k].Color));
                     }
                     result[index++] = vertices.ToArray();                    
                 }

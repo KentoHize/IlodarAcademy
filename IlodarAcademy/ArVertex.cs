@@ -5,7 +5,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using Aritiafel.IlodarAcademy.Mathematics;
+using Aritiafel.Organizations.RaeriharUniversity;
 
 namespace Aritiafel.IlodarAcademy
 {
@@ -17,22 +17,11 @@ namespace Aritiafel.IlodarAcademy
         public ArVertex(ArVector3 position, Color color)
             : this(position.X, position.Y, position.Z, color)
         { }
-        //public ArVertex(Vector3 position, Vector4 color)
-        //    : this(position.X, position.Y, position.Z, color.X, color.Y, color.Z, color.W)
-        //{ }
 
-        //public ArVertex(float x, float y, float z, Vector4 color)
-        //    : this(x, y, z, color.X, color.Y, color.Z, color.W)
-        //{ }
-
-        //public ArVertex(float x, float y, float z, Color color)
-        //    : this(x, y, z, color.A, color.R, color.G, color.B)
-        //{ }
-
-        public ArVertex(long x, long y, long z, int alpha, int red, int green, int blue)
+        public ArVertex(double x, double y, double z, int alpha, int red, int green, int blue)
             : this(x, y, z, Color.FromArgb(alpha, red, green, blue))
         { }
-        public ArVertex(long x, long y, long z, Color color)
+        public ArVertex(double x, double y, double z, Color color)
         {
             Position = new ArVector3(x, y, z);
             Color = color;

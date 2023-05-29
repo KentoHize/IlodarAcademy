@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aritiafel.Organizations.RaeriharUniversity;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -12,8 +13,8 @@ namespace Aritiafel.IlodarAcademy
     {
         public Ar3DModel[]? Models { get; set; }
         public Color BackgroudColor { get; set; } = Color.Black;        
-        public Vector3 TranslateTransform { get; set; } = Vector3.Zero;
-        public Vector3 RotationTransform { get; set; } = Vector3.Zero;
+        public ArVector3 TranslateTransform { get; set; }
+        public ArVector3 RotateTransform { get; set; }
         public int AmplificationFactor { get; set; } = 1;
 
         public Ar3DArea(List<Ar3DModel> models)

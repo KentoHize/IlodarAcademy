@@ -82,10 +82,10 @@ namespace SharpDXTPF
             {
                 case 'q':
                     //viewport = new ArViewport(viewport.X, viewport.Y, viewport.Width, viewport.Height, viewport.MinDepth, viewport.MaxDepth + 10);
-                    area.RotationTransform += new Vector3(10, 0, 0);
+                    area.RotateTransform += new Vector3(10, 0, 0);
                     break;
                 case 'e':
-                    area.RotationTransform += new Vector3(-10, 0, 0);
+                    area.RotateTransform += new Vector3(-10, 0, 0);
                     //viewport = new ArViewport(viewport.X, viewport.Y, viewport.Width, viewport.Height, viewport.MinDepth, viewport.MaxDepth - 10);
                     break;
                 case 'y':
