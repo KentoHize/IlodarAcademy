@@ -15,8 +15,7 @@ namespace Aritiafel.IlodarAcademy
         public Color BackgroudColor { get; set; } = Color.Black;        
         public ArVector3 TranslateTransform { get; set; }
         public ArVector3 RotateTransform { get; set; }
-        public int AmplificationFactor { get; set; } = 1;
-
+        public ArVector3 ScaleTransform { get; set; } = ArVector3.One;
         public Ar3DArea(List<Ar3DModel> models)
             : this(models.ToArray())
         { }

@@ -38,7 +38,7 @@ namespace SharpDXTPF
             area = new Ar3DArea();
             area.BackgroudColor = Color.Black;
             area.Models = new Ar3DModel[] { model, model2 };            
-            area.AmplificationFactor = 1;
+            area.ScaleTransform = 1;
             area.TranslateTransform = new Vector3(0, 0, 0);
             //area.TranslateTransform = new Vector3(0.5f, 0.5f, 0);
 

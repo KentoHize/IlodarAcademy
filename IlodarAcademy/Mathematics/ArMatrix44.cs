@@ -62,6 +62,21 @@ namespace Aritiafel.Organizations.RaeriharUniversity
                 a[3] * b[3, 0] + a[3] * b[3, 1] + a[3] * b[3, 2] + a[3] * b[3, 3]);
         }
 
+        public static ArMatrix44 operator *(ArMatrix44 a, ArMatrix44 b)
+        {
+            ArMatrix44 result = new ArMatrix44();
+            //result[0, 0] = a[0, 0] * b[0, 0] + a[0, 1] * b[1, 0] + a[0, 2] * b[2, 0] + a[0, 3] * b[3, 0];
+            //result[0, 1] = a[0, 0] * b[0, 1] + a[0, 1] * b[1, 1] + a[0, 2] * b[2, 1] + a[0, 3] * b[3, 1];
+            //result[0, 2] = a[0, 0] * b[0, 2] + a[0, 1] * b[1, 2] + a[0, 2] * b[2, 2] + a[0, 3] * b[3, 2];
+            //result[0, 3] = a[0, 0] * b[0, 3] + a[0, 1] * b[1, 3] + a[0, 2] * b[2, 3] + a[0, 3] * b[3, 3];
+            //result[1, 0] = a[1, 0] * b[0, 0] + a[1, 1] * b[1, 0] + a[1, 2] * b[2, 0] + a[1, 3] * b[3, 0];
+            //result[1, 1] = a[1, 0] * b[0, 1] + a[1, 1] * b[1, 1] + a[1, 2] * b[2, 1] + a[1, 3] * b[3, 1];
+            for (int i = 0; i < 4; i++)
+                for(int j = 0; j < 4; j++)
+                    result[i, j] = a[i, 0] * b[0, j] + a[i, 1] * b[1, j] + a[i, 2] * b[2, j] + a[i, 3] * b[3, j];
+            return result;
+        }
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();

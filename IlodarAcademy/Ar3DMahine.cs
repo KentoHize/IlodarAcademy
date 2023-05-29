@@ -10,22 +10,22 @@ namespace Aritiafel.IlodarAcademy
 {
     public static class Ar3DMahine
     {
-        public static ArVertex TraslateTransform(ArVertex av, Vector3 vector)
-        {
-            av.Position = new Vector3(av.Position.X + vector.X, av.Position.Y + vector.Y, av.Position.Z + vector.Z);
-            return av;
-        }
+        //public static ArVertex TraslateTransform(ArVertex av, Vector3 vector)
+        //{
+        //    av.Position = new Vector3(av.Position.X + vector.X, av.Position.Y + vector.Y, av.Position.Z + vector.Z);
+        //    return av;
+        //}
 
-        public static ArVertex RotateTransform(ArVertex av, Vector3 vector)
-        {   
-            return av;
-        }
+        //public static ArVertex RotateTransform(ArVertex av, Vector3 vector)
+        //{   
+        //    return av;
+        //}
 
-        public static ArVertex AmplificationTransform(ArVertex av, int factor)
-        {
-            av.Position = new Vector3(av.Position.X * factor, av.Position.Y * factor, av.Position.Z * factor);
-            return av;
-        }
+        //public static ArVertex AmplificationTransform(ArVertex av, int factor)
+        //{
+        //    av.Position = new Vector3(av.Position.X * factor, av.Position.Y * factor, av.Position.Z * factor);
+        //    return av;
+        //}
 
         //public Point TraslateTransformInverse(Point p, int transformX, int transformY)
         //{
@@ -54,10 +54,27 @@ namespace Aritiafel.IlodarAcademy
         //    return new Point(p.X / amplificationFactor, p.Y / amplificationFactor);
         //}
 
-        public static ArMatrix33 ProduceTransformMatrix(ArVector3 translateVector, ArVector3 rotateVector, double amplificationFactor = 1)
+        public static ArVector3 MultiplyTransformMatrix(ArVector3 position, ArMatrix44 transformMatrix)
         {
-            ArMatrix33 matrix = ArMatrix33.One;
-            matrix[0] translateVector
+            ArVector4 v4 = new ArVector4(position[0], position[1], position[2], 1) * transformMatrix;            
+            return new ArVector3(v4[0], v4[1], v4[2]);
+        }
+
+        public static ArMatrix44 ProduceTransformMatrix(ArVector3 translateVector, ArVector3 rotateVector, ArVector3 scaleVector)
+        {
+            ArMatrix44 result = ArMatrix44.One;
+            //Scale
+            result[0, 0] = result[0, 0] * scaleVector[0];
+            result[1, 1] = result[1, 1] * scaleVector[1];
+            result[2, 2] = result[2, 2] * scaleVector[2];
+            //Rotate
+            double cos = Math.Cos(rotateVector[0]);
+            double sin = Math.Sin(rotateVector[0]);
+            result
+            rotateVector[0]
+            //Translate
+
+            return result;
         }
 
         public static long PlaneCount(Ar3DArea area)
@@ -75,7 +92,7 @@ namespace Aritiafel.IlodarAcademy
             if (area.Models == null)
                 throw new NullReferenceException(nameof(area.Models));
             ArVertex[][] result = new ArVertex[PlaneCount(area)][];
-            ArMatrix33 transformMatrix = ProduceTransformMatrix(area.TranslateTransform, area.RotateTransform, area.AmplificationFactor);
+            ArMatrix44 transformMatrix = ProduceTransformMatrix(area.TranslateTransform, area.RotateTransform, area.ScaleTransform);
             long index = 0;
             for(long i = 0; i < area.Models.Length; i++)
             {
@@ -84,7 +101,7 @@ namespace Aritiafel.IlodarAcademy
                     List<ArVertex> vertices = new List<ArVertex>();
                     for (int k = 0; k < area.Models[i].Planes[j].Vertices.Length; k++)
                     {
-                        vertices.Add(new ArVertex(area.Models[i].Planes[j].Vertices[k].Position * transformMatrix,
+                        vertices.Add(new ArVertex(MultiplyTransformMatrix(area.Models[i].Planes[j].Vertices[k].Position, transformMatrix),
                             area.Models[i].Planes[j].Vertices[k].Color));
                     }
                     result[index++] = vertices.ToArray();                    
