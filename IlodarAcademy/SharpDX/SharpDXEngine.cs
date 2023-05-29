@@ -18,7 +18,7 @@ namespace Aritiafel.IlodarAcademy.SharpDX
     {
         //public string ShaderSLFile { get; set; } =  Path.Combine(Environment.CurrentDirectory, "shaders.hlsl");
         public string ShaderSLFile { get; set; } = @"C:\Programs\IlodarAcademy\IlodarAcademy\bin\Debug\net7.0\shaders.hlsl";        
-        public Vertex[][] Data { get; private set; }
+        public Vertex[] Data { get; private set; }
         public Color4 BackgroundColor { get; private set; }
         public IntPtr Handle { get; set; }
         public SwapEffect SwapEffect { get; private set; }
@@ -134,19 +134,20 @@ namespace Aritiafel.IlodarAcademy.SharpDX
         void LoadAssets2()
         {
             // Create the vertex buffer.
-            float aspectRatio = viewport.Width / viewport.Height;
+            //float aspectRatio = viewport.Width / viewport.Height;
 
             // Define the geometry for a triangle.
 
-            bundles = new GraphicsCommandList[Data.Length];
-            bundleAllocators = new CommandAllocator[Data.Length];
-            for (long i = 0; i < Data.LongLength; i++)
-            {
-                int vertexBufferSize = Utilities.SizeOf(Data[i]);
+            bundles = new GraphicsCommandList[1];
+            bundleAllocators = new CommandAllocator[1];
+            //for (long i = 0; i < Data.LongLength; i++)
+            //{
+                int vertexBufferSize = Utilities.SizeOf(Data);
                 //upload heap issue
                 vertexBuffer = device.CreateCommittedResource(new HeapProperties(HeapType.Upload), HeapFlags.None, ResourceDescription.Buffer(vertexBufferSize), ResourceStates.GenericRead);
                 IntPtr pVertexDataBegin = vertexBuffer.Map(0);
-                Utilities.Write(pVertexDataBegin, Data[i], 0, Data[i].Length);
+                //Fix
+                Utilities.Write(pVertexDataBegin, Data, 0, Data.Length);
                 vertexBuffer.Unmap(0);
                 // Initialize the vertex buffer view.
                 vertexBufferView = new VertexBufferView();
@@ -154,15 +155,15 @@ namespace Aritiafel.IlodarAcademy.SharpDX
                 vertexBufferView.StrideInBytes = Utilities.SizeOf<Vertex>();
                 vertexBufferView.SizeInBytes = vertexBufferSize;
                 // Create and record the bundle.                
-                bundleAllocators[i] = device.CreateCommandAllocator(CommandListType.Bundle);
-                bundles[i] = device.CreateCommandList(0, CommandListType.Bundle, bundleAllocators[i], pipelineState);
-                bundles[i].SetGraphicsRootSignature(rootSignature);
-                //bundles[i].PrimitiveTopology = PrimitiveTopology.TriangleList;
-                bundles[i].PrimitiveTopology = PrimitiveTopology.TriangleStrip;
-                bundles[i].SetVertexBuffer(0, vertexBufferView);
-                bundles[i].DrawInstanced(Data[i].Length, 1, 0, 0);
-                bundles[i].Close();
-            }
+                bundleAllocators[0] = device.CreateCommandAllocator(CommandListType.Bundle);
+                bundles[0] = device.CreateCommandList(0, CommandListType.Bundle, bundleAllocators[0], pipelineState);
+                bundles[0].SetGraphicsRootSignature(rootSignature);                
+                bundles[0].PrimitiveTopology = PrimitiveTopology.TriangleStrip;
+                bundles[0].SetVertexBuffer(0, vertexBufferView);
+                bundles[0].DrawInstanced(3, 1, 0, 0);
+                //bundles[0].DrawInstanced(3, Data.Length / 3, 0, 0);
+                bundles[0].Close();
+            //}
 
             // Create synchronization objects.
             fence = device.CreateFence(0, FenceFlags.None);

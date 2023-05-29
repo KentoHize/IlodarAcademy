@@ -102,35 +102,56 @@ namespace Aritiafel.IlodarAcademy
             return result;
         }
 
-        public static long PlaneCount(Ar3DArea area)
+        //public static long PlaneCount(Ar3DArea area)
+        //{
+        //    if (area.Models == null)
+        //        throw new NullReferenceException(nameof(area.Models));
+        //    long result = 0;
+        //    for (long i = 0; i < area.Models.LongLength; i++)
+        //        result += area.Models[i].Planes.Length;
+        //    return result;
+        //}
+
+        public static long VerticesCount(Ar3DArea area)
         {
             if (area.Models == null)
                 throw new NullReferenceException(nameof(area.Models));
             long result = 0;
             for (long i = 0; i < area.Models.LongLength; i++)
-                result += area.Models[i].Planes.Length;
+                for(int j = 0; j < area.Models[i].Planes.Length; j++)
+                    result += area.Models[i].Planes[j].Vertices.Length;
             return result;
         }
 
-        public static ArVertex[][] ProduceDrawingVertices(Ar3DArea area)
+        public static ArVertex[] ProduceDrawingVertices(Ar3DArea area)
         {
             if (area.Models == null)
                 throw new NullReferenceException(nameof(area.Models));
-            ArVertex[][] result = new ArVertex[PlaneCount(area)][];
+            ArVertex[] result = new ArVertex[VerticesCount(area)];
             ArMatrix44 transformMatrix = ProduceTransformMatrix(area.TranslateTransform, area.RotateTransform, area.ScaleTransform);
             
             long index = 0;
             for(long i = 0; i < area.Models.Length; i++)
             {
                 for(int j = 0; j < area.Models[i].Planes.Length; j++)
-                {
-                    List<ArVertex> vertices = new List<ArVertex>();
-                    for (int k = 0; k < area.Models[i].Planes[j].Vertices.Length; k++)
-                    {
-                        vertices.Add(new ArVertex(MultiplyTransformMatrix(area.Models[i].Planes[j].Vertices[k].Position, transformMatrix),
-                            area.Models[i].Planes[j].Vertices[k].Color));
+                {   
+                    int k = 0, l = area.Models[i].Planes[j].Vertices.Length - 1;
+                    while(k != l)
+                    {   
+                        result[index++] = new ArVertex(MultiplyTransformMatrix(
+                            area.Models[i].Planes[j].Vertices[k].Position, transformMatrix),
+                            area.Models[i].Planes[j].Vertices[k].Color);
+                        k++;
+                        if (k == l)
+                            break;
+                        result[index++] = new ArVertex(MultiplyTransformMatrix(
+                            area.Models[i].Planes[j].Vertices[l].Position, transformMatrix),
+                            area.Models[i].Planes[j].Vertices[l].Color);                        
+                        l--;
                     }
-                    result[index++] = vertices.ToArray();                    
+                    result[index++] = new ArVertex(MultiplyTransformMatrix(
+                            area.Models[i].Planes[j].Vertices[k].Position, transformMatrix),
+                            area.Models[i].Planes[j].Vertices[k].Color);
                 }
             }
             return result;
