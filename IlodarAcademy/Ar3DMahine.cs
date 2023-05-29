@@ -11,6 +11,7 @@ namespace Aritiafel.IlodarAcademy
 {
     public static class Ar3DMahine
     {
+        public static long StaticScaleFactor = 1000;
         //public static ArVertex TraslateTransform(ArVertex av, Vector3 vector)
         //{
         //    av.Position = new Vector3(av.Position.X + vector.X, av.Position.Y + vector.Y, av.Position.Z + vector.Z);
@@ -64,6 +65,10 @@ namespace Aritiafel.IlodarAcademy
         public static ArMatrix44 ProduceTransformMatrix(ArVector3 translateVector, ArVector3 rotateVector, ArVector3 scaleVector)
         {
             ArMatrix44 result = ArMatrix44.One;
+            //Standard Scale
+            result[0, 0] = result[0, 0] / StaticScaleFactor;
+            result[1, 1] = result[1, 1] / StaticScaleFactor;
+            result[2, 2] = result[2, 2] / StaticScaleFactor;
             //Scale
             result[0, 0] = result[0, 0] * scaleVector[0];
             result[1, 1] = result[1, 1] * scaleVector[1];

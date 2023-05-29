@@ -25,6 +25,10 @@ namespace Aritiafel.IlodarAcademy
         {
             Position = new ArVector3(x, y, z);
             Color = color;
-        }        
+        }
+
+        public ArVertex(double x, double y, double z)
+            : this(x, y, z, Color.Black)
+        { }
     }
 }

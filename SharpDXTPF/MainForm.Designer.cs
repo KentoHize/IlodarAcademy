@@ -32,6 +32,7 @@
             pibMain = new PictureBox();
             btnRender = new Button();
             btnScript = new Button();
+            btnRenderSquare = new Button();
             ((System.ComponentModel.ISupportInitialize)pibMain).BeginInit();
             SuspendLayout();
             // 
@@ -64,11 +65,22 @@
             btnScript.UseVisualStyleBackColor = true;
             btnScript.Click += btnScript_Click;
             // 
+            // btnRenderSquare
+            // 
+            btnRenderSquare.Location = new Point(790, 43);
+            btnRenderSquare.Name = "btnRenderSquare";
+            btnRenderSquare.Size = new Size(191, 32);
+            btnRenderSquare.TabIndex = 3;
+            btnRenderSquare.Text = "RenderSquare";
+            btnRenderSquare.UseVisualStyleBackColor = true;
+            btnRenderSquare.Click += btnRenderSquare_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(9F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1620, 1055);
+            Controls.Add(btnRenderSquare);
             Controls.Add(btnScript);
             Controls.Add(btnRender);
             Controls.Add(pibMain);
@@ -85,5 +97,6 @@
         private PictureBox pibMain;
         private Button btnRender;
         private Button btnScript;
+        private Button btnRenderSquare;
     }
 }

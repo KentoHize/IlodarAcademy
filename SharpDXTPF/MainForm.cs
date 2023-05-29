@@ -23,19 +23,19 @@ namespace SharpDXTPF
             model.Planes = new ArPlane[1];
 
             ArVertex[] vertices = new ArVertex[3];
-            vertices[0] = new ArVertex(1, 1, 0, Color.Red);
-            vertices[1] = new ArVertex(1, 0, 0, Color.Green);
-            vertices[2] = new ArVertex(0, 1, 0, Color.Blue);
+            vertices[0] = new ArVertex(1000, 1000, 0, Color.Red);
+            vertices[1] = new ArVertex(1000, 0, 0, Color.Green);
+            vertices[2] = new ArVertex(0, 1000, 0, Color.Blue);
             model.Planes[0] = new ArPlane(vertices);
 
             Ar3DModel model2 = new Ar3DModel();
             model2.Planes = new ArPlane[1];
             vertices = new ArVertex[3];
             vertices[0] = new ArVertex(0, 0, 0, Color.Red);
-            vertices[1] = new ArVertex(1, -4, 0, Color.Green);
-            vertices[2] = new ArVertex(-3, 0, 0, Color.Blue);
+            vertices[1] = new ArVertex(1000, -4000, 0, Color.Green);
+            vertices[2] = new ArVertex(-3000, 0, 0, Color.Blue);
             model2.Planes[0] = new ArPlane(vertices);
-            
+
             area = new Ar3DArea();
             area.BackgroudColor = Color.Black;
             area.Models = new Ar3DModel[] { model, model2 };
@@ -64,15 +64,31 @@ namespace SharpDXTPF
             sde.Render();
         }
 
+        private Ar3DModel[] GetBasicGrids(int width, int height)
+        {
+            Ar3DModel[] result = new Ar3DModel[width * height];
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    Ar3DModel model = new Ar3DModel();
+                    model.Planes = new ArPlane[1];
+                    ArVertex[] vertices = new ArVertex[4];
+                    vertices[0] = new ArVertex(0 + i, 0 + j, 0, Color.Black);
+                    vertices[1] = new ArVertex(1 + i, 0 + j, 0, Color.Black);
+                    vertices[2] = new ArVertex(1 + i, 1 + j, 0, Color.Black);
+                    vertices[3] = new ArVertex(0 + i, 1 + j, 0, Color.Black);
+                    model.Planes[0] = new ArPlane(vertices);
+                    result[i * height + j] = model;
+                }
+            }
+            return result;
+        }
+
         private void btnRender_Click(object sender, EventArgs e)
         {
-            //    Ar3DModel model2 = new Ar3DModel();
-            //    model2.Vertices = new ArVertex[3];
-            //    var aspectRatio = pibMain.ClientSize.Width / pibMain.ClientSize.Height;
-            //    model2.Vertices[0] = new ArVertex(0, 0.25f * aspectRatio, 0, Color.White);
-            //    model2.Vertices[1] = new ArVertex(0.25f, -0.25f * aspectRatio, 0, Color.Red);
-            //    model2.Vertices[2] = new ArVertex(-0.25f, -0.25f * aspectRatio, 0, Color.Green);
-            //    area.Models = new Ar3DModel[] { model2 };
+            area.Models = GetBasicGrids(100, 100);
+            area.BackgroudColor = Color.White;
             Upload();
         }
 
@@ -122,11 +138,11 @@ namespace SharpDXTPF
                     sde.Flush();
                     break;
                 case 'z':
-                    area.ScaleTransform += new ArVector3(1, 1, 1);
+                    area.ScaleTransform += new ArVector3(0.1, 0.1, 0.1);
                     break;
                 case 'c':
-                    if(area.ScaleTransform != ArVector3.One)
-                        area.ScaleTransform -= new ArVector3(1, 1, 1);
+                    if (area.ScaleTransform.X > 0.2)
+                        area.ScaleTransform -= new ArVector3(0.1, 0.1, 0.1);
                     break;
             }
             Upload();
@@ -140,6 +156,21 @@ namespace SharpDXTPF
         private void btnScript_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnRenderSquare_Click(object sender, EventArgs e)
+        {
+            Ar3DModel model = new Ar3DModel();
+            model.Planes = new ArPlane[1];
+
+            ArVertex[] vertices = new ArVertex[4];
+            vertices[0] = new ArVertex(1000, 1000, 0, Color.White);
+            vertices[1] = new ArVertex(1000, 0, 0, Color.White);            
+            vertices[3] = new ArVertex(0, 0, 0, Color.White);
+            vertices[2] = new ArVertex(0, 1000, 0, Color.White);
+            model.Planes[0] = new ArPlane(vertices);
+            area.Models = new Ar3DModel[] { model };
+            Upload();
         }
     }
 }

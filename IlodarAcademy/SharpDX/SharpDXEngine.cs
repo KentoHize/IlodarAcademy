@@ -157,7 +157,8 @@ namespace Aritiafel.IlodarAcademy.SharpDX
                 bundleAllocators[i] = device.CreateCommandAllocator(CommandListType.Bundle);
                 bundles[i] = device.CreateCommandList(0, CommandListType.Bundle, bundleAllocators[i], pipelineState);
                 bundles[i].SetGraphicsRootSignature(rootSignature);
-                bundles[i].PrimitiveTopology = PrimitiveTopology.TriangleList;
+                //bundles[i].PrimitiveTopology = PrimitiveTopology.TriangleList;
+                bundles[i].PrimitiveTopology = PrimitiveTopology.TriangleStrip;
                 bundles[i].SetVertexBuffer(0, vertexBufferView);
                 bundles[i].DrawInstanced(Data[i].Length, 1, 0, 0);
                 bundles[i].Close();

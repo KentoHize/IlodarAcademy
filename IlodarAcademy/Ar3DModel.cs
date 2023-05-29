@@ -7,7 +7,7 @@ using System.Numerics;
 
 namespace Aritiafel.IlodarAcademy
 {
-    public class Ar3DModel
+    public class Ar3DModel : ICloneable
     {
         ArPlane[] m_planes;
         public ArPlane[] Planes { get => m_planes; set { if (value.Length > int.MaxValue) throw new IndexOutOfRangeException(); m_planes = value; } }
@@ -21,5 +21,15 @@ namespace Aritiafel.IlodarAcademy
 
         public Ar3DModel()
         { }
+
+        public object Clone()
+        {
+            Ar3DModel result = new Ar3DModel();
+            if (Planes == null)
+                return result;
+            
+            result.m_planes = (ArPlane[])m_planes.Clone();
+            return result;
+        }
     }
 }
