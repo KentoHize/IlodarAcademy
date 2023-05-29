@@ -20,6 +20,12 @@
     <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Aritiafel">
+      <HintPath>..\..\Aritiafel\Aritiafel\bin\Release\netstandard2.0\Aritiafel.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="copy &quot;$(ProjectDir)SharpDX\shaders.hlsl&quot; &quot;$(ProjectDir)$(OutDir)shaders.hlsl&quot; /y" />
   </Target>
