@@ -16,7 +16,8 @@ namespace Aritiafel.IlodarAcademy.SharpDX
     {
         //public string ShaderSLFile { get; set; } =  Path.Combine(Environment.CurrentDirectory, "shaders.hlsl");
         public string ShaderSLFile { get; set; } = @"C:\Programs\IlodarAcademy\IlodarAcademy\bin\Debug\net7.0\shaders.hlsl";
-        public Vertex[] Data { get; private set; }
+        public Vertex[][] Data { get; private set; }
+        public PrimitiveTopology[] DrawingMethod { get; private set; }
         public Color4 BackgroundColor { get; private set; }
         public IntPtr Handle { get; set; }
         public SwapEffect SwapEffect { get; private set; }
@@ -59,8 +60,18 @@ namespace Aritiafel.IlodarAcademy.SharpDX
 
         public void Load(SharpDXData data)
         {
-            Data = data.GraphicData.ToSharpDXVerticesArray();
-            BackgroundColor = data.BackgroundColor.ToSharpDXColor4();            
+            BackgroundColor = data.BackgroundColor.ToSharpDXColor4();
+            Data = new Vertex[data.GraphicData.Length][];
+            for (int i = 0; i < data.GraphicData.Length; i++)
+            {
+                Data[i] = data.GraphicData[i].Data.ToSharpDXVerticesArray();
+                if (data.GraphicData[i].PrimitiveTopology == ArDrawingMethod.LineList)
+                    DrawingMethod[i] = PrimitiveTopology.LineList;
+                else if (data.GraphicData[i].PrimitiveTopology == ArDrawingMethod.TriangleList)
+                    DrawingMethod[i] = PrimitiveTopology.TriangleList;
+                else
+                    DrawingMethod[i] = PrimitiveTopology.Undefined;
+            }
             Flush();
         }
 
@@ -134,45 +145,44 @@ namespace Aritiafel.IlodarAcademy.SharpDX
             // Create the vertex buffer.
             // Define the geometry for a triangle.
 
-            bundles = new GraphicsCommandList[1];
-            bundleAllocators = new CommandAllocator[1];
+            bundles = new GraphicsCommandList[Data.Length];
+            bundleAllocators = new CommandAllocator[Data.Length];
 
-            //for (long i = 0; i < Data.LongLength; i++)
-            //{
+            for (int i = 0; i < Data.Length; i++)
+            {
 
-            float aspectRatio = viewport.Width / viewport.Height;
-           // Data = new[]
-           //{
-           //         new Vertex() {Position=new Vector3(0.0f, 0.25f * aspectRatio, 0.0f ),Color=new Vector4(1.0f, 0.0f, 0.0f, 1.0f ) },
-           //         new Vertex() {Position=new Vector3(0.25f, -0.25f * aspectRatio, 0.0f),Color=new Vector4(0.0f, 1.0f, 0.0f, 1.0f) },
-           //         new Vertex() {Position=new Vector3(-0.25f, -0.25f * aspectRatio, 0.0f),Color=new Vector4(0.0f, 0.0f, 1.0f, 1.0f ) },
-           //         new Vertex() {Position=new Vector3(0.5f, 0.25f * aspectRatio, 0.0f ),Color=new Vector4(1.0f, 0.0f, 0.0f, 1.0f ) },
-           //         new Vertex() {Position=new Vector3(0.75f, -0.25f * aspectRatio, 0.0f),Color=new Vector4(0.0f, 1.0f, 0.0f, 1.0f) },
-           //         new Vertex() {Position=new Vector3(0.25f, -0.25f * aspectRatio, 0.0f),Color=new Vector4(0.0f, 0.0f, 1.0f, 1.0f ) },
-           // };
-            int vertexBufferSize = Utilities.SizeOf(Data);
-            //upload heap issue
-            vertexBuffer = device.CreateCommittedResource(new HeapProperties(HeapType.Upload), HeapFlags.None, ResourceDescription.Buffer(vertexBufferSize), ResourceStates.GenericRead);
-            IntPtr pVertexDataBegin = vertexBuffer.Map(0);
-            //Fix
-            Utilities.Write(pVertexDataBegin, Data, 0, Data.Length);
-            
-            vertexBuffer.Unmap(0);
-            // Initialize the vertex buffer view.
-            vertexBufferView = new VertexBufferView();
-            vertexBufferView.BufferLocation = vertexBuffer.GPUVirtualAddress;
-            vertexBufferView.StrideInBytes = Utilities.SizeOf<Vertex>();
-            vertexBufferView.SizeInBytes = vertexBufferSize;
-            // Create and record the bundle.                
-            bundleAllocators[0] = device.CreateCommandAllocator(CommandListType.Bundle);
-            bundles[0] = device.CreateCommandList(0, CommandListType.Bundle, bundleAllocators[0], pipelineState);
-            bundles[0].SetGraphicsRootSignature(rootSignature);
-            bundles[0].PrimitiveTopology = PrimitiveTopology.TriangleList;
-            //bundles[0].PrimitiveTopology = PrimitiveTopology.LineList;
-            bundles[0].SetVertexBuffer(0, vertexBufferView);
-            bundles[0].DrawInstanced(Data.Length, 1, 0, 0);
-            bundles[0].Close();
-            //}
+                //float aspectRatio = viewport.Width / viewport.Height;
+                // Data = new[]
+                //{
+                //         new Vertex() {Position=new Vector3(0.0f, 0.25f * aspectRatio, 0.0f ),Color=new Vector4(1.0f, 0.0f, 0.0f, 1.0f ) },
+                //         new Vertex() {Position=new Vector3(0.25f, -0.25f * aspectRatio, 0.0f),Color=new Vector4(0.0f, 1.0f, 0.0f, 1.0f) },
+                //         new Vertex() {Position=new Vector3(-0.25f, -0.25f * aspectRatio, 0.0f),Color=new Vector4(0.0f, 0.0f, 1.0f, 1.0f ) },
+                //         new Vertex() {Position=new Vector3(0.5f, 0.25f * aspectRatio, 0.0f ),Color=new Vector4(1.0f, 0.0f, 0.0f, 1.0f ) },
+                //         new Vertex() {Position=new Vector3(0.75f, -0.25f * aspectRatio, 0.0f),Color=new Vector4(0.0f, 1.0f, 0.0f, 1.0f) },
+                //         new Vertex() {Position=new Vector3(0.25f, -0.25f * aspectRatio, 0.0f),Color=new Vector4(0.0f, 0.0f, 1.0f, 1.0f ) },
+                // };
+                int vertexBufferSize = Utilities.SizeOf(Data[i]);
+                //upload heap issue
+                vertexBuffer = device.CreateCommittedResource(new HeapProperties(HeapType.Upload), HeapFlags.None, ResourceDescription.Buffer(vertexBufferSize), ResourceStates.GenericRead);
+                IntPtr pVertexDataBegin = vertexBuffer.Map(0);
+                //Fix
+                Utilities.Write(pVertexDataBegin, Data[i], 0, Data[i].Length);
+
+                vertexBuffer.Unmap(0);
+                // Initialize the vertex buffer view.
+                vertexBufferView = new VertexBufferView();
+                vertexBufferView.BufferLocation = vertexBuffer.GPUVirtualAddress;
+                vertexBufferView.StrideInBytes = Utilities.SizeOf<Vertex>();
+                vertexBufferView.SizeInBytes = vertexBufferSize;
+                // Create and record the bundle.                
+                bundleAllocators[i] = device.CreateCommandAllocator(CommandListType.Bundle);
+                bundles[i] = device.CreateCommandList(0, CommandListType.Bundle, bundleAllocators[i], pipelineState);
+                bundles[i].SetGraphicsRootSignature(rootSignature);
+                bundles[i].PrimitiveTopology = DrawingMethod[i];
+                bundles[i].SetVertexBuffer(0, vertexBufferView);
+                bundles[i].DrawInstanced(Data[i].Length, 1, 0, 0);
+                bundles[i].Close();
+            }
 
             // Create synchronization objects.
             fence = device.CreateFence(0, FenceFlags.None);
