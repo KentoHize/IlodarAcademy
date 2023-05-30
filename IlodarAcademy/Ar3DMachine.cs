@@ -185,7 +185,7 @@ namespace Aritiafel.IlodarAcademy
                 return null;
             ArVertex[] result = new ArVertex[vercticesCount];
             long index = 0;
-            StringBuilder log = new StringBuilder();
+            //StringBuilder log = new StringBuilder();
             for (long i = 0; i < area.Models.Length; i++)
             {
                 for (int j = 0; j < area.Models[i].Planes.Length; j++)
@@ -204,11 +204,9 @@ namespace Aritiafel.IlodarAcademy
                             result[index++] = new ArVertex(MultiplyTransformMatrix(
                                 area.Models[i].Planes[j].Vertices[k + 1].Position, transformMatrix),
                                 area.Models[i].Planes[j].Vertices[k + 1].Color);
-
-                            string s = $"{k},{l}:{VerifyTraingleClockwise(result[index - 3], result[index - 2], result[index - 1], ArVector3.UnitZ)}";
-                            Debug.WriteLine(s);
-                            //log.AppendLine(s);
-                            
+                            //string s = $"{k},{l}:{VerifyTraingleClockwise(result[index - 3], result[index - 2], result[index - 1], ArVector3.UnitZ)}";
+                            //Debug.WriteLine(s);
+                            //log.AppendLine(s);                            
                             k++;
                             if (k == l - 1)
                                 break;
@@ -222,7 +220,7 @@ namespace Aritiafel.IlodarAcademy
                                 area.Models[i].Planes[j].Vertices[k].Position, transformMatrix),
                                 area.Models[i].Planes[j].Vertices[k].Color);                            
                             //s = $"{k},{l}:{VerifyTraingleClockwise(result[index - 3], result[index - 2], result[index - 1], ArVector3.UnitZ)}";
-                            Debug.WriteLine($"{k},{l}:{VerifyTraingleClockwise(result[index - 3], result[index - 2], result[index - 1], ArVector3.UnitZ)}");
+                            //Debug.WriteLine($"{k},{l}:{VerifyTraingleClockwise(result[index - 3], result[index - 2], result[index - 1], ArVector3.UnitZ)}");
                             //log.AppendLine(s);
                             l--;
                         }

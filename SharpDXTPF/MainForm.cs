@@ -88,7 +88,7 @@ namespace SharpDXTPF
 
         private void btnRender_Click(object sender, EventArgs e)
         {
-            area.Models = GetBasicGrids(100, 100);
+            area.Models = GetBasicGrids(1000, 1000);
             area.BackgroudColor = Color.White;
             Upload();
         }
@@ -196,7 +196,8 @@ namespace SharpDXTPF
                 new ArVertex(Math.Cos(Math.PI / 3) * -1000, Math.Sin(Math.PI / 3) * -1000, 0, Color.White),
                 new ArVertex(Math.Cos(Math.PI / 6) * -1000, Math.Sin(Math.PI / 6) * -1000, 0, Color.White),
             };
-            
+
+            vertices.Reverse();
             Ar3DModel model = new Ar3DModel();
 
             //Line
