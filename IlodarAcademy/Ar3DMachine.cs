@@ -9,6 +9,7 @@ using System.Diagnostics;
 using SharpDX;
 using Aritiafel.IlodarAcademy.SharpDX;
 using System.Runtime.InteropServices;
+using SharpDX.Direct3D12;
 
 namespace Aritiafel.IlodarAcademy
 {
@@ -143,11 +144,14 @@ namespace Aritiafel.IlodarAcademy
             return result;
         }
 
-        public static ArVertex[] ProduceLineListVertices(Ar3DArea area, ArMatrix44 transformMatrix)
+        public static ArVertex[]? ProduceLineListVertices(Ar3DArea area, ArMatrix44 transformMatrix)
         {
             if (area.Models == null)
                 throw new NullReferenceException(nameof(area.Models));
-            ArVertex[] result = new ArVertex[VerticesCount(area, ArDrawingMethod.LineList)];
+            long vercticesCount = VerticesCount(area, ArDrawingMethod.LineList);
+            if (vercticesCount == 0)
+                return null;
+            ArVertex[] result = new ArVertex[vercticesCount];
             long index = 0;
             for (long i = 0; i < area.Models.Length; i++)
             {
@@ -167,11 +171,21 @@ namespace Aritiafel.IlodarAcademy
             return result;
         }
 
-        public static ArVertex[] ProduceTraingleListVertices(Ar3DArea area, ArMatrix44 transformMatrix)
+        public static bool VerifyTraingleClockwise(ArVertex a, ArVertex b, ArVertex c, ArVector3 viewDirection)
+        {
+            ArVector3 x = b.Position - a.Position;
+            ArVector3 y = c.Position - b.Position;
+            return x.CrossProduct(y).DotProduct(viewDirection) <= 0;
+        }
+
+        public static ArVertex[]? ProduceTriangleListVertices(Ar3DArea area, ArMatrix44 transformMatrix)
         {
             if (area.Models == null)
                 throw new NullReferenceException(nameof(area.Models));
-            ArVertex[] result = new ArVertex[VerticesCount(area, ArDrawingMethod.TriangleList)];
+            long vercticesCount = VerticesCount(area, ArDrawingMethod.TriangleList);
+            if (vercticesCount == 0)
+                return null;
+            ArVertex[] result = new ArVertex[vercticesCount];
             long index = 0;
             for (long i = 0; i < area.Models.Length; i++)
             {
@@ -181,16 +195,17 @@ namespace Aritiafel.IlodarAcademy
                     {
                         int k = 0, l = area.Models[i].Planes[j].Vertices.Length - 1;
                         while (l != k + 1)
-                        {
-                            result[index++] = new ArVertex(MultiplyTransformMatrix(
-                                area.Models[i].Planes[j].Vertices[k].Position, transformMatrix),
-                                area.Models[i].Planes[j].Vertices[k].Color);
+                        {   
                             result[index++] = new ArVertex(MultiplyTransformMatrix(
                                 area.Models[i].Planes[j].Vertices[l].Position, transformMatrix),
                                 area.Models[i].Planes[j].Vertices[l].Color);
                             result[index++] = new ArVertex(MultiplyTransformMatrix(
                                 area.Models[i].Planes[j].Vertices[k + 1].Position, transformMatrix),
                                 area.Models[i].Planes[j].Vertices[k + 1].Color);
+                            result[index++] = new ArVertex(MultiplyTransformMatrix(
+                                area.Models[i].Planes[j].Vertices[k].Position, transformMatrix),
+                                area.Models[i].Planes[j].Vertices[k].Color);
+                            Debug.WriteLine($"{k},{l}:{VerifyTraingleClockwise(result[index - 3], result[index - 2], result[index - 1], ArVector3.UnitZ)}");
                             k++;
                             if (k == l - 1)
                                 break;
@@ -198,11 +213,12 @@ namespace Aritiafel.IlodarAcademy
                                 area.Models[i].Planes[j].Vertices[l].Position, transformMatrix),
                                 area.Models[i].Planes[j].Vertices[l].Color);
                             result[index++] = new ArVertex(MultiplyTransformMatrix(
-                                area.Models[i].Planes[j].Vertices[k].Position, transformMatrix),
-                                area.Models[i].Planes[j].Vertices[k].Color);
-                            result[index++] = new ArVertex(MultiplyTransformMatrix(
                                 area.Models[i].Planes[j].Vertices[l - 1].Position, transformMatrix),
                                 area.Models[i].Planes[j].Vertices[l - 1].Color);
+                            result[index++] = new ArVertex(MultiplyTransformMatrix(
+                                area.Models[i].Planes[j].Vertices[k].Position, transformMatrix),
+                                area.Models[i].Planes[j].Vertices[k].Color);                            
+                            Debug.WriteLine($"{k},{l}:{VerifyTraingleClockwise(result[index - 3], result[index - 2], result[index - 1], ArVector3.UnitZ)}");
                             l--;
                         }
                     }
@@ -235,15 +251,30 @@ namespace Aritiafel.IlodarAcademy
         {
             if (area.Models == null)
                 throw new NullReferenceException(nameof(area.Models));
-            SharpDXBundleData[] result = new SharpDXBundleData[2];
+            List<SharpDXBundleData> result = new List<SharpDXBundleData>();
+            //SharpDXBundleData[] result = new SharpDXBundleData[2];
+            //for (int i = 0; i < result.Length; i++)
+            //    result[i] = new SharpDXBundleData();
             ArMatrix44 transformMatrix = ProduceTransformMatrix(area.TranslateTransform, area.RotateTransform, area.ScaleTransform);
 
             //可以再研究更快 同一循環中完成所有Verticle
-            result[0].Data = ProduceLineListVertices(area, transformMatrix);
-            result[0].PrimitiveTopology = ArDrawingMethod.LineList;
-            result[1].Data = ProduceTraingleListVertices(area, transformMatrix);
-            result[1].PrimitiveTopology = ArDrawingMethod.TriangleList;
-            return result;
+            ArVertex[] av = ProduceLineListVertices(area, transformMatrix);
+            if (av != null)
+                result.Add(new SharpDXBundleData
+                {
+                    Data = av,
+                    PrimitiveTopology = ArDrawingMethod.LineList
+                });
+
+            av = ProduceTriangleListVertices(area, transformMatrix);
+            if (av != null)
+                result.Add(new SharpDXBundleData
+                {
+                    Data = av,
+                    PrimitiveTopology = ArDrawingMethod.TriangleList
+                });
+
+            return result.ToArray();
         }
     }
 }

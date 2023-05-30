@@ -178,5 +178,21 @@ namespace SharpDXTPF
             area.Models = new Ar3DModel[] { model };
             Upload();
         }
+
+        private void btnRenderTwelvePronged_Click(object sender, EventArgs e)
+        {
+            Ar3DModel model = new Ar3DModel();
+            model.Planes = new ArPlane[1];
+
+            List<ArVertex> vertices = new List<ArVertex>();
+            vertices.Add(new ArVertex(0, 0, 0, Color.White));
+            vertices.Add(new ArVertex(1000, 0, 0, Color.White));
+            vertices.Add(new ArVertex(0, 1000, 0, Color.White));            
+            vertices.Add(new ArVertex(1000 * Math.Sin(Math.PI / 6), 1000 * Math.Cos(Math.PI / 6), 0, Color.White));
+            vertices.Add(new ArVertex(1000 * Math.Sin(Math.PI / 3), 1000 * Math.Cos(Math.PI / 3), 0, Color.White));
+            model.Planes[0] = new ArPlane(vertices);
+            area.Models = new Ar3DModel[] { model };
+            Upload();
+        }
     }
 }

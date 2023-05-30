@@ -33,6 +33,7 @@
             btnRender = new Button();
             btnScript = new Button();
             btnRenderSquare = new Button();
+            btnRenderTwelvePronged = new Button();
             ((System.ComponentModel.ISupportInitialize)pibMain).BeginInit();
             SuspendLayout();
             // 
@@ -75,11 +76,22 @@
             btnRenderSquare.UseVisualStyleBackColor = true;
             btnRenderSquare.Click += btnRenderSquare_Click;
             // 
+            // btnRenderTwelvePronged
+            // 
+            btnRenderTwelvePronged.Location = new Point(571, 41);
+            btnRenderTwelvePronged.Name = "btnRenderTwelvePronged";
+            btnRenderTwelvePronged.Size = new Size(191, 32);
+            btnRenderTwelvePronged.TabIndex = 4;
+            btnRenderTwelvePronged.Text = "Render 12 Pronged";
+            btnRenderTwelvePronged.UseVisualStyleBackColor = true;
+            btnRenderTwelvePronged.Click += btnRenderTwelvePronged_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(9F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1620, 1055);
+            Controls.Add(btnRenderTwelvePronged);
             Controls.Add(btnRenderSquare);
             Controls.Add(btnScript);
             Controls.Add(btnRender);
@@ -98,5 +110,6 @@
         private Button btnRender;
         private Button btnScript;
         private Button btnRenderSquare;
+        private Button btnRenderTwelvePronged;
     }
 }

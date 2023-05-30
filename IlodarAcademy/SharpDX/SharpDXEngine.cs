@@ -62,6 +62,7 @@ namespace Aritiafel.IlodarAcademy.SharpDX
         {
             BackgroundColor = data.BackgroundColor.ToSharpDXColor4();
             Data = new Vertex[data.GraphicData.Length][];
+            DrawingMethod = new PrimitiveTopology[data.GraphicData.Length];
             for (int i = 0; i < data.GraphicData.Length; i++)
             {
                 Data[i] = data.GraphicData[i].Data.ToSharpDXVerticesArray();
