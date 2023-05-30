@@ -2,6 +2,8 @@ using Aritiafel.IlodarAcademy.SharpDX;
 using Aritiafel.IlodarAcademy;
 using System.Numerics;
 using Aritiafel.Organizations.RaeriharUniversity;
+using System.Diagnostics;
+using SharpDX.DXGI;
 
 namespace SharpDXTPF
 {
@@ -56,13 +58,23 @@ namespace SharpDXTPF
 
         void Upload()
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             SharpDXData data = new SharpDXData
             {
                 GraphicData = Ar3DMachine.ProduceDrawingData(area),
                 BackgroundColor = Color.Black
             };
+            sw.Stop();
+            Debug.WriteLine($"Produce Drawing Data: {sw.ElapsedMilliseconds}");            
+            sw.Restart();
             sde.Load(data);
+            sw.Stop();
+            Debug.WriteLine($"Upload Data to GPU: {sw.ElapsedMilliseconds}");
+            sw.Restart();
             sde.Render();
+            sw.Stop();
+            Debug.WriteLine($"Render: {sw.ElapsedMilliseconds}");
         }
 
         private Ar3DModel[] GetBasicGrids(int width, int height)
