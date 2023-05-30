@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
+using Aritiafel.IlodarAcademy.SharpDX;
 
 namespace Aritiafel.IlodarAcademy
 {
@@ -11,6 +12,7 @@ namespace Aritiafel.IlodarAcademy
     {
         ArPlane[] m_planes;
         public ArPlane[] Planes { get => m_planes; set { if (value.Length > int.MaxValue) throw new IndexOutOfRangeException(); m_planes = value; } }
+        //public ArDrawingMethod DrawingMethod { get; set; } = ArDrawingMethod.TriangleList;
         public Ar3DModel(List<ArPlane> planes)
             : this(planes.ToArray())
         { }

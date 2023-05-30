@@ -58,7 +58,7 @@ namespace SharpDXTPF
         {
             SharpDXData data = new SharpDXData
             {
-                GraphicData = Ar3DMahine.ProduceDrawingVertices(area),
+                GraphicData = Ar3DMachine.ProduceDrawingData(area),
                 BackgroundColor = Color.Black
             };
             sde.Load(data);
@@ -75,10 +75,10 @@ namespace SharpDXTPF
                     Ar3DModel model = new Ar3DModel();
                     model.Planes = new ArPlane[1];
                     ArVertex[] vertices = new ArVertex[4];
-                    vertices[0] = new ArVertex(0 + i, 0 + j, 0, Color.Black);
-                    vertices[1] = new ArVertex(1 + i, 0 + j, 0, Color.Black);
-                    vertices[2] = new ArVertex(1 + i, 1 + j, 0, Color.Black);
-                    vertices[3] = new ArVertex(0 + i, 1 + j, 0, Color.Black);
+                    vertices[0] = new ArVertex(0 + i, 0 + j, 0, Color.White);
+                    vertices[1] = new ArVertex(1 + i, 0 + j, 0, Color.White);
+                    vertices[2] = new ArVertex(1 + i, 1 + j, 0, Color.White);
+                    vertices[3] = new ArVertex(0 + i, 1 + j, 0, Color.White);
                     model.Planes[0] = new ArPlane(vertices);
                     result[i * height + j] = model;
                 }

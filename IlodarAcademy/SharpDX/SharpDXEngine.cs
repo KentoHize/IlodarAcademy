@@ -1,5 +1,4 @@
-﻿using Aritiafel.IlodarAcademy;
-using SharpDX.Direct3D;
+﻿using SharpDX.Direct3D;
 using SharpDX.Direct3D12;
 using SharpDX;
 using SharpDX.DXGI;
@@ -8,9 +7,7 @@ using Device = SharpDX.Direct3D12.Device;
 using Resource = SharpDX.Direct3D12.Resource;
 using ShaderBytecodeDC = SharpDX.D3DCompiler.ShaderBytecode;
 using ShaderBytecodeD12 = SharpDX.Direct3D12.ShaderBytecode;
-using SharpDX.Mathematics;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Data;
+using Aritiafel.IlodarAcademy.SharpDX;
 
 namespace Aritiafel.IlodarAcademy.SharpDX
 {
@@ -63,8 +60,7 @@ namespace Aritiafel.IlodarAcademy.SharpDX
         public void Load(SharpDXData data)
         {
             Data = data.GraphicData.ToSharpDXVerticesArray();
-            BackgroundColor = data.BackgroundColor.ToSharpDXColor4();
-            //BackgroundColor = Color4.White;
+            BackgroundColor = data.BackgroundColor.ToSharpDXColor4();            
             Flush();
         }
 
@@ -136,8 +132,6 @@ namespace Aritiafel.IlodarAcademy.SharpDX
         void LoadAssets2()
         {
             // Create the vertex buffer.
-            
-
             // Define the geometry for a triangle.
 
             bundles = new GraphicsCommandList[1];
@@ -173,10 +167,9 @@ namespace Aritiafel.IlodarAcademy.SharpDX
             bundleAllocators[0] = device.CreateCommandAllocator(CommandListType.Bundle);
             bundles[0] = device.CreateCommandList(0, CommandListType.Bundle, bundleAllocators[0], pipelineState);
             bundles[0].SetGraphicsRootSignature(rootSignature);
-            bundles[0].PrimitiveTopology = PrimitiveTopology.TriangleStrip;
+            bundles[0].PrimitiveTopology = PrimitiveTopology.TriangleList;
+            //bundles[0].PrimitiveTopology = PrimitiveTopology.LineList;
             bundles[0].SetVertexBuffer(0, vertexBufferView);
-            //bundles[0].DrawInstanced(Data.Length, Data.Length / 3, 0, 0);
-            //bundles[0].DrawInstanced(3, Data.Length / 3, 0, 0);
             bundles[0].DrawInstanced(Data.Length, 1, 0, 0);
             bundles[0].Close();
             //}
@@ -195,7 +188,6 @@ namespace Aritiafel.IlodarAcademy.SharpDX
             rootSignature = device.CreateRootSignature(rootSignatureDesc.Serialize());
 
             // Create the pipeline state, which includes compiling and loading shaders.
-
 #if DEBUG
             var vertexShader = new ShaderBytecodeD12(ShaderBytecodeDC.CompileFromFile(ShaderSLFile, "VSMain", "vs_5_0", ShaderFlags.Debug));
 #else
@@ -207,8 +199,6 @@ namespace Aritiafel.IlodarAcademy.SharpDX
 #else
             var pixelShader = new ShaderBytecodeD12(ShaderBytecodeDC.CompileFromFile("shaders.hlsl", "PSMain", "ps_5_0"));
 #endif
-
-
 
             // Define the vertex input layout.
             var inputElementDescs = new[]

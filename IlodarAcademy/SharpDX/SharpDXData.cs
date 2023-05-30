@@ -10,9 +10,7 @@ namespace Aritiafel.IlodarAcademy.SharpDX
 {
     public class SharpDXData
     {
-        public ArVertex[] GraphicData { get; set; }
-        
-        public Color BackgroundColor { get; set; }
-            
+        public SharpDXBundleData[] GraphicData { get; set; }        
+        public Color BackgroundColor { get; set; }            
     }
 }
