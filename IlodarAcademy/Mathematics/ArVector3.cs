@@ -9,16 +9,15 @@ using Aritiafel.Organizations.RaeriharUniversity;
 
 namespace Aritiafel.Organizations.RaeriharUniversity
 {
-    public struct ArVector3 : IEquatable<ArVector3>
+    public struct ArVector3 : IEquatable<ArVector3>, IFormattable
     {
         double[] _data = new double[3];
 
-        public static ArVector3 Zero { get => new ArVector3(); }
-        public static ArVector3 One { get => new ArVector3(1, 1, 1); }
-        public static ArVector3 UnitX { get => new ArVector3(1, 0, 0); }
-        public static ArVector3 UnitY { get => new ArVector3(0, 1, 0); }
-        public static ArVector3 UnitZ { get => new ArVector3(0, 0, 1); }
-
+        public static readonly ArVector3 Zero = new ArVector3();
+        public static readonly ArVector3 One = new ArVector3(1, 1, 1);
+        public static readonly ArVector3 UnitX = new ArVector3(1, 0, 0);
+        public static readonly ArVector3 UnitY = new ArVector3(0, 1, 0);
+        public static readonly ArVector3 UnitZ = new ArVector3(0, 0, 1);
         public ArVector3()
         { }
 
@@ -59,8 +58,10 @@ namespace Aritiafel.Organizations.RaeriharUniversity
         public double GetLength()
             => Math.Sqrt(_data[0] * _data[0] + _data[1] * _data[1] + _data[2] * _data[2]);
         public override string ToString()
-            => $"({_data[0]},{_data[1]},{_data[2]})";
+            => $"({_data[0]}, {_data[1]}, {_data[2]})";
         public bool Equals(ArVector3 other)
-            => _data[0] == other._data[0] && _data[1] == other._data[1] && _data[2] == other._data[2];        
+            => _data[0] == other._data[0] && _data[1] == other._data[1] && _data[2] == other._data[2];
+        public string ToString(string? format, IFormatProvider? formatProvider)        
+            => string.Format(formatProvider, "({0}, {1}, {2})", _data[0], _data[1], _data[2]);
     }
 }

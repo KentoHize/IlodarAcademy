@@ -8,6 +8,7 @@ using Resource = SharpDX.Direct3D12.Resource;
 using ShaderBytecodeDC = SharpDX.D3DCompiler.ShaderBytecode;
 using ShaderBytecodeD12 = SharpDX.Direct3D12.ShaderBytecode;
 using Aritiafel.IlodarAcademy.SharpDX;
+using System.Diagnostics;
 
 namespace Aritiafel.IlodarAcademy.SharpDX
 {
@@ -60,6 +61,8 @@ namespace Aritiafel.IlodarAcademy.SharpDX
 
         public void Load(SharpDXData data)
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             BackgroundColor = data.BackgroundColor.ToSharpDXColor4();
             Data = new Vertex[data.GraphicData.Length][];
             DrawingMethod = new PrimitiveTopology[data.GraphicData.Length];
@@ -73,7 +76,12 @@ namespace Aritiafel.IlodarAcademy.SharpDX
                 else
                     DrawingMethod[i] = PrimitiveTopology.Undefined;
             }
+            sw.Stop();
+            Debug.WriteLine($"To VerticesArray:{sw.ElapsedMilliseconds}");
+            sw.Restart();
             Flush();
+            sw.Stop();
+            Debug.WriteLine($"Load Assets:{sw.ElapsedMilliseconds}");
         }
 
         public void Flush()
@@ -162,11 +170,16 @@ namespace Aritiafel.IlodarAcademy.SharpDX
                 //         new Vertex() {Position=new Vector3(0.75f, -0.25f * aspectRatio, 0.0f),Color=new Vector4(0.0f, 1.0f, 0.0f, 1.0f) },
                 //         new Vertex() {Position=new Vector3(0.25f, -0.25f * aspectRatio, 0.0f),Color=new Vector4(0.0f, 0.0f, 1.0f, 1.0f ) },
                 // };
+                Vector4
                 int vertexBufferSize = Utilities.SizeOf(Data[i]);
                 //upload heap issue
                 vertexBuffer = device.CreateCommittedResource(new HeapProperties(HeapType.Upload), HeapFlags.None, ResourceDescription.Buffer(vertexBufferSize), ResourceStates.GenericRead);
                 IntPtr pVertexDataBegin = vertexBuffer.Map(0);
                 //Fix
+                //Ar3DArea area;
+                ArVertex av;
+                
+                
                 Utilities.Write(pVertexDataBegin, Data[i], 0, Data[i].Length);
 
                 vertexBuffer.Unmap(0);

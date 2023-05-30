@@ -176,6 +176,53 @@ namespace Aritiafel.IlodarAcademy
             return x.CrossProduct(y).DotProduct(viewDirection) <= 0;
         }
 
+        public static ArVertex[]? ProduceTriangleListVerticesTest(Ar3DArea area, ArMatrix44 transformMatrix)
+        {
+            if (area.Models == null)
+                throw new NullReferenceException(nameof(area.Models));
+            long vercticesCount = VerticesCount(area, ArDrawingMethod.TriangleList);
+            if (vercticesCount == 0)
+                return null;
+            ArVertex[] result = new ArVertex[vercticesCount];
+            long index = 0;            
+            for (long i = 0; i < area.Models.Length; i++)
+            {
+                for (int j = 0; j < area.Models[i].Planes.Length; j++)
+                {
+                    if (area.Models[i].Planes[j].IsPlane)
+                    {
+                        int k = 0, l = area.Models[i].Planes[j].Vertices.Length - 1;
+                        while (l != k + 1)
+                        {
+                            result[index++] = new ArVertex(
+                                area.Models[i].Planes[j].Vertices[k].Position,
+                                area.Models[i].Planes[j].Vertices[k].Color);
+                            result[index++] = new ArVertex(
+                                area.Models[i].Planes[j].Vertices[l].Position,
+                                area.Models[i].Planes[j].Vertices[l].Color);
+                            result[index++] = new ArVertex(
+                                area.Models[i].Planes[j].Vertices[k + 1].Position,
+                                area.Models[i].Planes[j].Vertices[k + 1].Color);
+                            k++;
+                            if (k == l - 1)
+                                break;
+                            result[index++] = new ArVertex(
+                                area.Models[i].Planes[j].Vertices[l].Position,
+                                area.Models[i].Planes[j].Vertices[l].Color);
+                            result[index++] = new ArVertex(
+                                area.Models[i].Planes[j].Vertices[l - 1].Position,
+                                area.Models[i].Planes[j].Vertices[l - 1].Color);
+                            result[index++] = new ArVertex(
+                                area.Models[i].Planes[j].Vertices[k].Position,
+                                area.Models[i].Planes[j].Vertices[k].Color);
+                            l--;
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+
         public static ArVertex[]? ProduceTriangleListVertices(Ar3DArea area, ArMatrix44 transformMatrix)
         {
             if (area.Models == null)
@@ -197,7 +244,7 @@ namespace Aritiafel.IlodarAcademy
                         {
                             result[index++] = new ArVertex(MultiplyTransformMatrix(
                                 area.Models[i].Planes[j].Vertices[k].Position, transformMatrix),
-                                area.Models[i].Planes[j].Vertices[k].Color);                            
+                                area.Models[i].Planes[j].Vertices[k].Color);
                             result[index++] = new ArVertex(MultiplyTransformMatrix(
                                 area.Models[i].Planes[j].Vertices[l].Position, transformMatrix),
                                 area.Models[i].Planes[j].Vertices[l].Color);
@@ -271,6 +318,7 @@ namespace Aritiafel.IlodarAcademy
                     PrimitiveTopology = ArDrawingMethod.LineList
                 });
 
+            //av = ProduceTriangleListVerticesTest(area, transformMatrix);
             av = ProduceTriangleListVertices(area, transformMatrix);
             if (av != null)
                 result.Add(new SharpDXBundleData

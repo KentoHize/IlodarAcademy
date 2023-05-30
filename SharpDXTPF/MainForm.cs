@@ -66,11 +66,8 @@ namespace SharpDXTPF
                 BackgroundColor = Color.Black
             };
             sw.Stop();
-            Debug.WriteLine($"Produce Drawing Data: {sw.ElapsedMilliseconds}");            
-            sw.Restart();
-            sde.Load(data);
-            sw.Stop();
-            Debug.WriteLine($"Upload Data to GPU: {sw.ElapsedMilliseconds}");
+            Debug.WriteLine($"Produce Drawing Data: {sw.ElapsedMilliseconds}");
+            sde.Load(data);            
             sw.Restart();
             sde.Render();
             sw.Stop();
@@ -194,7 +191,7 @@ namespace SharpDXTPF
         private void btnRenderTwelvePronged_Click(object sender, EventArgs e)
         {
             List<ArVertex> vertices = new List<ArVertex>
-            {   
+            {
                 new ArVertex(-1000, 0, 0, Color.White),
                 new ArVertex(Math.Cos(Math.PI / 6) * -1000, Math.Sin(Math.PI / 6) * 1000, 0, Color.White),
                 new ArVertex(Math.Cos(Math.PI / 3) * -1000, Math.Sin(Math.PI / 3) * 1000, 0, Color.White),

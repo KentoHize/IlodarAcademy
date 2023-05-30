@@ -10,8 +10,8 @@ namespace Aritiafel.Organizations.RaeriharUniversity
     public struct ArMatrix44
     {
         double[,] _data;
-        public static ArMatrix44 Zero { get => new ArMatrix44(); }
-        public static ArMatrix44 One { get => new ArMatrix44(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
+        public static readonly ArMatrix44 Zero = new ArMatrix44();
+        public static readonly ArMatrix44 One = new ArMatrix44(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 
         public ArMatrix44()
         {

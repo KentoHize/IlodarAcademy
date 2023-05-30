@@ -48,11 +48,11 @@
             // 
             // btnRender
             // 
-            btnRender.Location = new Point(1000, 43);
+            btnRender.Location = new Point(796, 41);
             btnRender.Name = "btnRender";
-            btnRender.Size = new Size(73, 32);
+            btnRender.Size = new Size(245, 32);
             btnRender.TabIndex = 1;
-            btnRender.Text = "Render";
+            btnRender.Text = "Render 1000 x 1000 square";
             btnRender.UseVisualStyleBackColor = true;
             btnRender.Click += btnRender_Click;
             // 
@@ -68,7 +68,7 @@
             // 
             // btnRenderSquare
             // 
-            btnRenderSquare.Location = new Point(790, 43);
+            btnRenderSquare.Location = new Point(583, 41);
             btnRenderSquare.Name = "btnRenderSquare";
             btnRenderSquare.Size = new Size(191, 32);
             btnRenderSquare.TabIndex = 3;
@@ -78,7 +78,7 @@
             // 
             // btnRenderTwelvePronged
             // 
-            btnRenderTwelvePronged.Location = new Point(571, 41);
+            btnRenderTwelvePronged.Location = new Point(386, 45);
             btnRenderTwelvePronged.Name = "btnRenderTwelvePronged";
             btnRenderTwelvePronged.Size = new Size(191, 32);
             btnRenderTwelvePronged.TabIndex = 4;
