@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 using System.Numerics;
 using Aritiafel.Organizations.RaeriharUniversity;
 using System.Diagnostics;
-using SharpDX;
 using Aritiafel.IlodarAcademy.SharpDX;
-using System.Runtime.InteropServices;
-using SharpDX.Direct3D12;
+using Aritiafel.Characters.Heroes;
 
 namespace Aritiafel.IlodarAcademy
 {
@@ -187,6 +185,7 @@ namespace Aritiafel.IlodarAcademy
                 return null;
             ArVertex[] result = new ArVertex[vercticesCount];
             long index = 0;
+            StringBuilder log = new StringBuilder();
             for (long i = 0; i < area.Models.Length; i++)
             {
                 for (int j = 0; j < area.Models[i].Planes.Length; j++)
@@ -195,17 +194,21 @@ namespace Aritiafel.IlodarAcademy
                     {
                         int k = 0, l = area.Models[i].Planes[j].Vertices.Length - 1;
                         while (l != k + 1)
-                        {   
+                        {
+                            result[index++] = new ArVertex(MultiplyTransformMatrix(
+                                area.Models[i].Planes[j].Vertices[k].Position, transformMatrix),
+                                area.Models[i].Planes[j].Vertices[k].Color);                            
                             result[index++] = new ArVertex(MultiplyTransformMatrix(
                                 area.Models[i].Planes[j].Vertices[l].Position, transformMatrix),
                                 area.Models[i].Planes[j].Vertices[l].Color);
                             result[index++] = new ArVertex(MultiplyTransformMatrix(
                                 area.Models[i].Planes[j].Vertices[k + 1].Position, transformMatrix),
                                 area.Models[i].Planes[j].Vertices[k + 1].Color);
-                            result[index++] = new ArVertex(MultiplyTransformMatrix(
-                                area.Models[i].Planes[j].Vertices[k].Position, transformMatrix),
-                                area.Models[i].Planes[j].Vertices[k].Color);
-                            Debug.WriteLine($"{k},{l}:{VerifyTraingleClockwise(result[index - 3], result[index - 2], result[index - 1], ArVector3.UnitZ)}");
+
+                            string s = $"{k},{l}:{VerifyTraingleClockwise(result[index - 3], result[index - 2], result[index - 1], ArVector3.UnitZ)}";
+                            Debug.WriteLine(s);
+                            //log.AppendLine(s);
+                            
                             k++;
                             if (k == l - 1)
                                 break;
@@ -218,12 +221,16 @@ namespace Aritiafel.IlodarAcademy
                             result[index++] = new ArVertex(MultiplyTransformMatrix(
                                 area.Models[i].Planes[j].Vertices[k].Position, transformMatrix),
                                 area.Models[i].Planes[j].Vertices[k].Color);                            
+                            //s = $"{k},{l}:{VerifyTraingleClockwise(result[index - 3], result[index - 2], result[index - 1], ArVector3.UnitZ)}";
                             Debug.WriteLine($"{k},{l}:{VerifyTraingleClockwise(result[index - 3], result[index - 2], result[index - 1], ArVector3.UnitZ)}");
+                            //log.AppendLine(s);
                             l--;
                         }
                     }
                 }
             }
+            //Debug.WriteLine("?");
+            //Tina.SaveTextFile(@"C:\Programs\TestArea\T3.txt", log.ToString());
             return result;
         }
 

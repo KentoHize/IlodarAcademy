@@ -12,5 +12,6 @@ namespace Aritiafel.IlodarAcademy.SharpDX
         public IntPtr Handle { get; set; }
         public ArSwapEffect SwapEffect { get; set; } = ArSwapEffect.FlipDiscard;
         public ArViewport Viewport { get; set; }
+        public bool CullTwoFace { get; set; } = false;
     }
 }

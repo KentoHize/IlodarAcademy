@@ -52,8 +52,8 @@ namespace Aritiafel.Organizations.RaeriharUniversity
 
         public ArVector3 CrossProduct(ArVector3 a)
             => new ArVector3(_data[1] * a._data[2] - _data[2] * a._data[1],
-                _data[0] * a._data[2] - _data[2] * a._data[0],
-                _data[01] * a._data[1] - _data[1] * a._data[0]);
+                _data[2] * a._data[0] - _data[0] * a._data[2],
+                _data[0] * a._data[1] - _data[1] * a._data[0]);
         public double DotProduct(ArVector3 a)
             => _data[0] * a._data[0] + _data[1] * a._data[1] + _data[2] * a._data[2];
         public double GetLength()

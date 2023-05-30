@@ -21,7 +21,7 @@ namespace Aritiafel.IlodarAcademy.SharpDX
         public Color4 BackgroundColor { get; private set; }
         public IntPtr Handle { get; set; }
         public SwapEffect SwapEffect { get; private set; }
-        public ViewportF viewport { get; private set; }
+        public ViewportF viewport { get; private set; }        
 
         Rectangle scissorRect;
         Device device;
@@ -54,8 +54,8 @@ namespace Aritiafel.IlodarAcademy.SharpDX
             viewport = new ViewportF(setting.Viewport.X, setting.Viewport.Y,
                     setting.Viewport.Width, setting.Viewport.Height,
                     setting.Viewport.MinDepth, setting.Viewport.MaxDepth);
-            LoadPipeline();
-            LoadAssets();
+            LoadPipeline(setting);
+            LoadAssets(setting);
         }
 
         public void Load(SharpDXData data)
@@ -81,7 +81,7 @@ namespace Aritiafel.IlodarAcademy.SharpDX
             LoadAssets2();
         }
 
-        void LoadPipeline()
+        void LoadPipeline(SharpDXSetting setting)
         {
             if (Handle == nint.Zero)
                 return;
@@ -192,7 +192,7 @@ namespace Aritiafel.IlodarAcademy.SharpDX
             // Create an event handle to use for frame synchronization.
             fenceEvent = new AutoResetEvent(false);
         }
-        void LoadAssets()
+        void LoadAssets(SharpDXSetting setting)
         {
             // Create an empty root signature.
             var rootSignatureDesc = new RootSignatureDescription(RootSignatureFlags.AllowInputAssemblerInputLayout);
@@ -218,14 +218,24 @@ namespace Aritiafel.IlodarAcademy.SharpDX
                     new InputElement("COLOR",0,Format.R32G32B32A32_Float,12,0)
             };
 
+            //畫所有三角形
+            RasterizerStateDescription rasterizerStateDesc = new RasterizerStateDescription()
+            {
+                CullMode = setting.CullTwoFace ? CullMode.None : CullMode.Front,
+                FillMode = FillMode.Solid,
+                IsDepthClipEnabled = false,
+                IsFrontCounterClockwise = true,
+                IsMultisampleEnabled = false,
+            };
+            
             // Describe and create the graphics pipeline state object (PSO).
             var psoDesc = new GraphicsPipelineStateDescription()
             {
                 InputLayout = new InputLayoutDescription(inputElementDescs),
                 RootSignature = rootSignature,
                 VertexShader = vertexShader,
-                PixelShader = pixelShader,
-                RasterizerState = RasterizerStateDescription.Default(),
+                PixelShader = pixelShader,                
+                RasterizerState = rasterizerStateDesc,
                 BlendState = BlendStateDescription.Default(),
                 DepthStencilFormat = Format.D32_Float,
                 DepthStencilState = new DepthStencilStateDescription() { IsDepthEnabled = false, IsStencilEnabled = false },

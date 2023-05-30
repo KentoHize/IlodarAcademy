@@ -181,15 +181,33 @@ namespace SharpDXTPF
 
         private void btnRenderTwelvePronged_Click(object sender, EventArgs e)
         {
+            List<ArVertex> vertices = new List<ArVertex>
+            {   
+                new ArVertex(-1000, 0, 0, Color.White),
+                new ArVertex(Math.Cos(Math.PI / 6) * -1000, Math.Sin(Math.PI / 6) * 1000, 0, Color.White),
+                new ArVertex(Math.Cos(Math.PI / 3) * -1000, Math.Sin(Math.PI / 3) * 1000, 0, Color.White),
+                new ArVertex(0, 1000, 0, Color.White),
+                new ArVertex(Math.Cos(Math.PI / 3) * 1000, Math.Sin(Math.PI / 3) * 1000, 0, Color.White),
+                new ArVertex(Math.Cos(Math.PI / 6) * 1000, Math.Sin(Math.PI / 6) * 1000, 0, Color.White),
+                new ArVertex(1000, 0, 0, Color.White),
+                new ArVertex(Math.Cos(Math.PI / 6) * 1000, Math.Sin(Math.PI / 6) * -1000, 0, Color.White),
+                new ArVertex(Math.Cos(Math.PI / 3) * 1000, Math.Sin(Math.PI / 3) * -1000, 0, Color.White),
+                new ArVertex(0, -1000, 0, Color.White),
+                new ArVertex(Math.Cos(Math.PI / 3) * -1000, Math.Sin(Math.PI / 3) * -1000, 0, Color.White),
+                new ArVertex(Math.Cos(Math.PI / 6) * -1000, Math.Sin(Math.PI / 6) * -1000, 0, Color.White),
+            };
+            
             Ar3DModel model = new Ar3DModel();
-            model.Planes = new ArPlane[1];
 
-            List<ArVertex> vertices = new List<ArVertex>();
-            vertices.Add(new ArVertex(0, 0, 0, Color.White));
-            vertices.Add(new ArVertex(1000, 0, 0, Color.White));
-            vertices.Add(new ArVertex(0, 1000, 0, Color.White));            
-            vertices.Add(new ArVertex(1000 * Math.Sin(Math.PI / 6), 1000 * Math.Cos(Math.PI / 6), 0, Color.White));
-            vertices.Add(new ArVertex(1000 * Math.Sin(Math.PI / 3), 1000 * Math.Cos(Math.PI / 3), 0, Color.White));
+            //Line
+            //List<ArPlane> planes = new List<ArPlane>();
+            //for(int i = 0; i < vertices.Count - 1; i++)
+            //    planes.Add(new ArPlane(vertices.GetRange(i, 2)));
+            //planes.Add(new ArPlane(new List<ArVertex> { vertices[vertices.Count - 1], vertices[0] }));
+            //model.Planes = planes.ToArray();
+
+            //Plane
+            model.Planes = new ArPlane[1];
             model.Planes[0] = new ArPlane(vertices);
             area.Models = new Ar3DModel[] { model };
             Upload();

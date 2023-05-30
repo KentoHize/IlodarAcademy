@@ -39,9 +39,9 @@
             // 
             // pibMain
             // 
-            pibMain.Location = new Point(1, 81);
+            pibMain.Location = new Point(109, 81);
             pibMain.Name = "pibMain";
-            pibMain.Size = new Size(1621, 971);
+            pibMain.Size = new Size(1000, 1000);
             pibMain.TabIndex = 0;
             pibMain.TabStop = false;
             pibMain.MouseClick += pibMain_MouseClick;
