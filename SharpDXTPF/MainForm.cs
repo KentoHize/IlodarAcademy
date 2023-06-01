@@ -183,7 +183,9 @@ namespace SharpDXTPF
             vertices[1] = new ArVertex(1000, 0, 0, Color.White);
             vertices[2] = new ArVertex(1000, 1000, 0, Color.White);
             vertices[3] = new ArVertex(0, 1000, 0, Color.White);
+            //vertices.Reverse();
             model.Planes[0] = new ArPlane(vertices);
+            
             area.Models = new Ar3DModel[] { model };
             Upload();
         }

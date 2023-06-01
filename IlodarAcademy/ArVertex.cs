@@ -13,7 +13,7 @@ namespace Aritiafel.IlodarAcademy
     {
         public ArVector3 Position { get; set; }
         public Color Color { get; set; }
-        public static ArVertex Empty => new ArVertex(0, 0, 0, Color.Empty);
+        public static readonly ArVertex Empty = new ArVertex(0, 0, 0, Color.Empty);
         public ArVertex(ArVector3 position, Color color)
             : this(position.X, position.Y, position.Z, color)
         { }

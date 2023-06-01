@@ -170,24 +170,26 @@ namespace Aritiafel.IlodarAcademy.SharpDX
                 //         new Vertex() {Position=new Vector3(0.75f, -0.25f * aspectRatio, 0.0f),Color=new Vector4(0.0f, 1.0f, 0.0f, 1.0f) },
                 //         new Vertex() {Position=new Vector3(0.25f, -0.25f * aspectRatio, 0.0f),Color=new Vector4(0.0f, 0.0f, 1.0f, 1.0f ) },
                 // };
-                Vector4
-                int vertexBufferSize = Utilities.SizeOf(Data[i]);
+                //Vector4
+                
+                
                 //upload heap issue
-                vertexBuffer = device.CreateCommittedResource(new HeapProperties(HeapType.Upload), HeapFlags.None, ResourceDescription.Buffer(vertexBufferSize), ResourceStates.GenericRead);
-                IntPtr pVertexDataBegin = vertexBuffer.Map(0);
-                //Fix
-                //Ar3DArea area;
-                ArVertex av;
+                if(vertexBuffer == null)
+                {
+                    int vertexBufferSize = Utilities.SizeOf(Data[i]);
+                    vertexBuffer = device.CreateCommittedResource(new HeapProperties(HeapType.Upload), HeapFlags.None, ResourceDescription.Buffer(vertexBufferSize), ResourceStates.GenericRead);
+                    IntPtr pVertexDataBegin = vertexBuffer.Map(0);
+                    Utilities.Write(pVertexDataBegin, Data[i], 0, Data[i].Length);
+                    vertexBuffer.Unmap(0);
+                    vertexBufferView = new VertexBufferView();
+                    vertexBufferView.BufferLocation = vertexBuffer.GPUVirtualAddress;
+                    vertexBufferView.StrideInBytes = Utilities.SizeOf<Vertex>();
+                    vertexBufferView.SizeInBytes = vertexBufferSize;
+                }
+               
                 
-                
-                Utilities.Write(pVertexDataBegin, Data[i], 0, Data[i].Length);
-
-                vertexBuffer.Unmap(0);
                 // Initialize the vertex buffer view.
-                vertexBufferView = new VertexBufferView();
-                vertexBufferView.BufferLocation = vertexBuffer.GPUVirtualAddress;
-                vertexBufferView.StrideInBytes = Utilities.SizeOf<Vertex>();
-                vertexBufferView.SizeInBytes = vertexBufferSize;
+               
                 // Create and record the bundle.                
                 bundleAllocators[i] = device.CreateCommandAllocator(CommandListType.Bundle);
                 bundles[i] = device.CreateCommandList(0, CommandListType.Bundle, bundleAllocators[i], pipelineState);
