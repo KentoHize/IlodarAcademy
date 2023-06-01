@@ -7,15 +7,32 @@ using Device = SharpDX.Direct3D12.Device;
 using Resource = SharpDX.Direct3D12.Resource;
 using ShaderBytecodeDC = SharpDX.D3DCompiler.ShaderBytecode;
 using ShaderBytecodeD12 = SharpDX.Direct3D12.ShaderBytecode;
+using InfoQueue = SharpDX.Direct3D12.InfoQueue;
 using Aritiafel.IlodarAcademy.SharpDX;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Aritiafel.IlodarAcademy.SharpDX
 {
 
     public class SharpDXEngine
     {
+        struct ConstantBuffer
+        {
+            public Vector4 data;
+            public Vector4 data2;
+            public Vector4 data3;
+            //public Vector4 data4;
+        }
+
+        struct ConstantBuffer2
+        {
+            public Vector4 data;
+        }
+
         //public string ShaderSLFile { get; set; } =  Path.Combine(Environment.CurrentDirectory, "shaders.hlsl");
+
+        //public string ShaderSLFile { get; set; } = @""
         public string ShaderSLFile { get; set; } = @"C:\Programs\IlodarAcademy\IlodarAcademy\bin\Debug\net7.0\shaders.hlsl";
         public Vertex[][] Data { get; private set; }
         public PrimitiveTopology[] DrawingMethod { get; private set; }
@@ -27,12 +44,15 @@ namespace Aritiafel.IlodarAcademy.SharpDX
         Rectangle scissorRect;
         Device device;
         SwapChain3 swapChain;
+        InfoQueue iq;
 
         CommandAllocator commandAllocator;
         CommandAllocator[] bundleAllocators;
         CommandQueue commandQueue;
         const int FrameCount = 2;
         DescriptorHeap renderTargetViewHeap;
+        DescriptorHeap constantBufferViewHeap;
+        //DescriptorHeap constantBufferViewHeap2;
         PipelineState pipelineState;
         int rtvDescriptorSize;
         readonly Resource[] renderTargets = new Resource[FrameCount];
@@ -40,7 +60,15 @@ namespace Aritiafel.IlodarAcademy.SharpDX
         GraphicsCommandList commandList;
         GraphicsCommandList[] bundles;
         Resource vertexBuffer;
+        Resource constantBuffer;
+        Resource constantBuffer2;
         VertexBufferView vertexBufferView;
+        
+
+        ConstantBuffer constantBufferData;
+        IntPtr constantBufferPointer;
+
+        ConstantBuffer2 constantBuffer2Data;
 
         AutoResetEvent fenceEvent;
         Fence fence;
@@ -99,13 +127,15 @@ namespace Aritiafel.IlodarAcademy.SharpDX
                 DebugInterface.Get().EnableDebugLayer();
             }
 #endif
+            
             device = new Device(null, FeatureLevel.Level_11_0);
             using (var factory = new Factory4())
             {
                 // Describe and create the command queue.
                 var queueDesc = new CommandQueueDescription(CommandListType.Direct);
                 commandQueue = device.CreateCommandQueue(queueDesc);
-
+                //Range[] range = new Range[2];
+                //range.
                 // Describe and create the swap chain.
                 var swapChainDesc = new SwapChainDescription()
                 {
@@ -122,6 +152,8 @@ namespace Aritiafel.IlodarAcademy.SharpDX
                 var tempSwapChain = new SwapChain(factory, commandQueue, swapChainDesc);
                 swapChain = tempSwapChain.QueryInterface<SwapChain3>();
                 tempSwapChain.Dispose();
+                //iq = DebugInterface.Get().QueryInterface<InfoQueue>();
+                iq = device.QueryInterface<InfoQueue>();
                 frameIndex = swapChain.CurrentBackBufferIndex;
             }
 
@@ -133,12 +165,19 @@ namespace Aritiafel.IlodarAcademy.SharpDX
                 Flags = DescriptorHeapFlags.None,
                 Type = DescriptorHeapType.RenderTargetView
             };
-
             renderTargetViewHeap = device.CreateDescriptorHeap(rtvHeapDesc);
 
-            rtvDescriptorSize = device.GetDescriptorHandleIncrementSize(DescriptorHeapType.RenderTargetView);
+            var cbvHeapDesc = new DescriptorHeapDescription()
+            {
+                DescriptorCount = 2,
+                Flags = DescriptorHeapFlags.ShaderVisible,
+                Type = DescriptorHeapType.ConstantBufferViewShaderResourceViewUnorderedAccessView
+            };
+            constantBufferViewHeap = device.CreateDescriptorHeap(cbvHeapDesc);
+            
 
-            // Create frame resources.
+            rtvDescriptorSize = device.GetDescriptorHandleIncrementSize(DescriptorHeapType.RenderTargetView);
+            //// Create frame resources.
             var rtvHandle = renderTargetViewHeap.CPUDescriptorHandleForHeapStart;
             for (int n = 0; n < FrameCount; n++)
             {
@@ -149,68 +188,30 @@ namespace Aritiafel.IlodarAcademy.SharpDX
             commandAllocator = device.CreateCommandAllocator(CommandListType.Direct);
         }
 
-        void LoadAssets2()
-        {
-            // Create the vertex buffer.
-            // Define the geometry for a triangle.
-
-            bundles = new GraphicsCommandList[Data.Length];
-            bundleAllocators = new CommandAllocator[Data.Length];
-
-            for (int i = 0; i < Data.Length; i++)
-            {
-
-                //float aspectRatio = viewport.Width / viewport.Height;
-                // Data = new[]
-                //{
-                //         new Vertex() {Position=new Vector3(0.0f, 0.25f * aspectRatio, 0.0f ),Color=new Vector4(1.0f, 0.0f, 0.0f, 1.0f ) },
-                //         new Vertex() {Position=new Vector3(0.25f, -0.25f * aspectRatio, 0.0f),Color=new Vector4(0.0f, 1.0f, 0.0f, 1.0f) },
-                //         new Vertex() {Position=new Vector3(-0.25f, -0.25f * aspectRatio, 0.0f),Color=new Vector4(0.0f, 0.0f, 1.0f, 1.0f ) },
-                //         new Vertex() {Position=new Vector3(0.5f, 0.25f * aspectRatio, 0.0f ),Color=new Vector4(1.0f, 0.0f, 0.0f, 1.0f ) },
-                //         new Vertex() {Position=new Vector3(0.75f, -0.25f * aspectRatio, 0.0f),Color=new Vector4(0.0f, 1.0f, 0.0f, 1.0f) },
-                //         new Vertex() {Position=new Vector3(0.25f, -0.25f * aspectRatio, 0.0f),Color=new Vector4(0.0f, 0.0f, 1.0f, 1.0f ) },
-                // };
-                //Vector4
-                
-                
-                //upload heap issue
-                if(vertexBuffer == null)
-                {
-                    int vertexBufferSize = Utilities.SizeOf(Data[i]);
-                    vertexBuffer = device.CreateCommittedResource(new HeapProperties(HeapType.Upload), HeapFlags.None, ResourceDescription.Buffer(vertexBufferSize), ResourceStates.GenericRead);
-                    IntPtr pVertexDataBegin = vertexBuffer.Map(0);
-                    Utilities.Write(pVertexDataBegin, Data[i], 0, Data[i].Length);
-                    vertexBuffer.Unmap(0);
-                    vertexBufferView = new VertexBufferView();
-                    vertexBufferView.BufferLocation = vertexBuffer.GPUVirtualAddress;
-                    vertexBufferView.StrideInBytes = Utilities.SizeOf<Vertex>();
-                    vertexBufferView.SizeInBytes = vertexBufferSize;
-                }
-               
-                
-                // Initialize the vertex buffer view.
-               
-                // Create and record the bundle.                
-                bundleAllocators[i] = device.CreateCommandAllocator(CommandListType.Bundle);
-                bundles[i] = device.CreateCommandList(0, CommandListType.Bundle, bundleAllocators[i], pipelineState);
-                bundles[i].SetGraphicsRootSignature(rootSignature);
-                bundles[i].PrimitiveTopology = DrawingMethod[i];
-                bundles[i].SetVertexBuffer(0, vertexBufferView);
-                bundles[i].DrawInstanced(Data[i].Length, 1, 0, 0);
-                bundles[i].Close();
-            }
-
-            // Create synchronization objects.
-            fence = device.CreateFence(0, FenceFlags.None);
-            fenceValue = 1;
-
-            // Create an event handle to use for frame synchronization.
-            fenceEvent = new AutoResetEvent(false);
-        }
         void LoadAssets(SharpDXSetting setting)
         {
             // Create an empty root signature.
-            var rootSignatureDesc = new RootSignatureDescription(RootSignatureFlags.AllowInputAssemblerInputLayout);
+            var rootSignatureDesc = new RootSignatureDescription(RootSignatureFlags.AllowInputAssemblerInputLayout,
+               // Root Parameters
+               new[]
+               {
+                    new RootParameter(ShaderVisibility.All,
+                        new DescriptorRange()
+                        {
+                            RangeType = DescriptorRangeType.ConstantBufferView,
+                            BaseShaderRegister = 0,
+                            OffsetInDescriptorsFromTableStart = -1,
+                            DescriptorCount = 1
+                        },
+                         new DescriptorRange()
+                        {
+                            RangeType = DescriptorRangeType.ConstantBufferView,
+                            BaseShaderRegister = 1,
+                            OffsetInDescriptorsFromTableStart = -1,
+                            DescriptorCount = 1
+                        })
+               });
+            //var rootSignatureDesc = new RootSignatureDescription(RootSignatureFlags.AllowInputAssemblerInputLayout);
             rootSignature = device.CreateRootSignature(rootSignatureDesc.Serialize());
 
             // Create the pipeline state, which includes compiling and loading shaders.
@@ -242,14 +243,14 @@ namespace Aritiafel.IlodarAcademy.SharpDX
                 IsFrontCounterClockwise = true,
                 IsMultisampleEnabled = false,
             };
-            
+
             // Describe and create the graphics pipeline state object (PSO).
             var psoDesc = new GraphicsPipelineStateDescription()
             {
                 InputLayout = new InputLayoutDescription(inputElementDescs),
                 RootSignature = rootSignature,
                 VertexShader = vertexShader,
-                PixelShader = pixelShader,                
+                PixelShader = pixelShader,
                 RasterizerState = rasterizerStateDesc,
                 BlendState = BlendStateDescription.Default(),
                 DepthStencilFormat = Format.D32_Float,
@@ -261,8 +262,8 @@ namespace Aritiafel.IlodarAcademy.SharpDX
                 SampleDescription = new SampleDescription(1, 0),
                 StreamOutput = new StreamOutputDescription()
             };
-            psoDesc.RenderTargetFormats[0] = Format.R8G8B8A8_UNorm;
 
+            
             pipelineState = device.CreateGraphicsPipelineState(psoDesc);
 
             // Create the command list.
@@ -271,8 +272,118 @@ namespace Aritiafel.IlodarAcademy.SharpDX
             commandList = device.CreateCommandList(CommandListType.Direct, commandAllocator, pipelineState);
             commandList.Close();
 
-            //LoadAssets2();
+            constantBuffer = device.CreateCommittedResource(new HeapProperties(HeapType.Upload), HeapFlags.None, ResourceDescription.Buffer(256), ResourceStates.GenericRead);
+            var cbvDesc = new ConstantBufferViewDescription()
+            {
+                BufferLocation = constantBuffer.GPUVirtualAddress,
+                SizeInBytes = (Utilities.SizeOf<ConstantBuffer>() + 255) & ~255
+            };            
+            device.CreateConstantBufferView(cbvDesc, constantBufferViewHeap.CPUDescriptorHandleForHeapStart);
+            //device.CreateConstantBufferView(cbvDesc, constantBufferViewHeap.CPUDescriptorHandleForHeapStart);
+
+            constantBufferData = new ConstantBuffer
+            {
+                data = new Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+                data2 = new Vector4(0.5f, 0.5f, 0, 0),
+                data3 = new Vector4(0.0f, 1.0f, 0, 1.0f),
+                //data4 = new Vector4(1.0f, 0.0f, 0.0f, 1.0f)
+            };
+            constantBuffer2Data = new ConstantBuffer2
+            {
+                data = new Vector4(1.0f, 1.0f, 0.0f, 1.0f)
+            };
+            //var data = new object [] { constantBufferData, constantBuffer2Data };
+            
+            constantBufferPointer = constantBuffer.Map(0);
+            
+            Debug.WriteLine($"Constant Buffer Pointer:{string.Format("{0:X}", constantBufferPointer)}");
+            Utilities.Write(constantBufferPointer, ref constantBufferData);
+            //var cbvDescriptorSize = device.GetDescriptorHandleIncrementSize(DescriptorHeapType.ConstantBufferViewShaderResourceViewUnorderedAccessView);
+            //Utilities.Write(constantBufferPointer + 36, ref constantBuffer2Data);
+            //     Utilities.Write(constantBufferPointer + cbvDescriptorSize, ref constantBuffer2Data);
+            //Utilities.Write(constantBufferPointer + 256 * 4, ref constantBuffer2Data);
+            //Utilities.Write(constantBufferPointer + 1024 * 64, ref constantBuffer2Data);
+            //Utilities.Write(constantBufferPointer, ref constantBufferData);            
+            //Utilities.Write(constantBufferPointer + sizeof(float) * 8, ref constantBuffer2Data);
+            //constantBuffer.Unmap(0);
+
+            constantBuffer2 = device.CreateCommittedResource(new HeapProperties(HeapType.Upload), HeapFlags.None, ResourceDescription.Buffer(256), ResourceStates.GenericRead);
+            cbvDesc = new ConstantBufferViewDescription()
+            {
+                BufferLocation = constantBuffer2.GPUVirtualAddress,
+                SizeInBytes = (Utilities.SizeOf<ConstantBuffer2>() + 255) & ~255
+            };
+
+            //var = new ShaderResourceView()  ConstantBufferViewDescription()
+
+
+            ////device.CreateConstantBufferView(cbvDesc, constantBufferViewHeap.CPUDescriptorHandleForHeapStart);
+
+            constantBufferPointer = constantBuffer2.Map(0);
+            Debug.WriteLine($"Constant Buffer Pointer:{string.Format("{0:X}", constantBufferPointer)}");
+            Utilities.Write(constantBufferPointer, ref constantBuffer2Data);
+            
+            //constantBuffer2.Unmap(0);
         }
+
+        void LoadAssets2()
+        {
+            // Create the vertex buffer.
+            // Define the geometry for a triangle.
+
+            bundles = new GraphicsCommandList[Data.Length];
+            bundleAllocators = new CommandAllocator[Data.Length];
+
+            for (int i = 0; i < Data.Length; i++)
+            {
+
+                //float aspectRatio = viewport.Width / viewport.Height;
+                // Data = new[]
+                //{
+                //         new Vertex() {Position=new Vector3(0.0f, 0.25f * aspectRatio, 0.0f ),Color=new Vector4(1.0f, 0.0f, 0.0f, 1.0f ) },
+                //         new Vertex() {Position=new Vector3(0.25f, -0.25f * aspectRatio, 0.0f),Color=new Vector4(0.0f, 1.0f, 0.0f, 1.0f) },
+                //         new Vertex() {Position=new Vector3(-0.25f, -0.25f * aspectRatio, 0.0f),Color=new Vector4(0.0f, 0.0f, 1.0f, 1.0f ) },
+                //         new Vertex() {Position=new Vector3(0.5f, 0.25f * aspectRatio, 0.0f ),Color=new Vector4(1.0f, 0.0f, 0.0f, 1.0f ) },
+                //         new Vertex() {Position=new Vector3(0.75f, -0.25f * aspectRatio, 0.0f),Color=new Vector4(0.0f, 1.0f, 0.0f, 1.0f) },
+                //         new Vertex() {Position=new Vector3(0.25f, -0.25f * aspectRatio, 0.0f),Color=new Vector4(0.0f, 0.0f, 1.0f, 1.0f ) },
+                // };
+                //Vector4
+                
+                //upload heap issue
+                //if(vertexBuffer == null)
+                //{
+                    int vertexBufferSize = Utilities.SizeOf(Data[i]);
+                    vertexBuffer = device.CreateCommittedResource(new HeapProperties(HeapType.Upload), HeapFlags.None, ResourceDescription.Buffer(vertexBufferSize), ResourceStates.GenericRead);
+                    IntPtr pVertexDataBegin = vertexBuffer.Map(0);
+                    Utilities.Write(pVertexDataBegin, Data[i], 0, Data[i].Length);
+                    vertexBuffer.Unmap(0);
+                    vertexBufferView = new VertexBufferView();
+                    vertexBufferView.BufferLocation = vertexBuffer.GPUVirtualAddress;
+                    vertexBufferView.StrideInBytes = Utilities.SizeOf<Vertex>();
+                    vertexBufferView.SizeInBytes = vertexBufferSize;
+                //}                
+                // Initialize the vertex buffer view.
+               
+                // Create and record the bundle.                
+                bundleAllocators[i] = device.CreateCommandAllocator(CommandListType.Bundle);
+                bundles[i] = device.CreateCommandList(0, CommandListType.Bundle, bundleAllocators[i], pipelineState);
+                bundles[i].SetGraphicsRootSignature(rootSignature);
+                bundles[i].PrimitiveTopology = DrawingMethod[i];
+                bundles[i].SetVertexBuffer(0, vertexBufferView);
+                bundles[i].DrawInstanced(Data[i].Length, 1, 0, 0);
+                bundles[i].Close();
+                
+            }
+
+            
+            // Create synchronization objects.
+            fence = device.CreateFence(0, FenceFlags.None);
+            fenceValue = 1;
+
+            // Create an event handle to use for frame synchronization.
+            fenceEvent = new AutoResetEvent(false);
+        }
+      
 
         public void PopulateCommandList()
         {
@@ -288,6 +399,16 @@ namespace Aritiafel.IlodarAcademy.SharpDX
 
 
             commandList.SetGraphicsRootSignature(rootSignature);
+
+            //DescriptorHeap[] dh = new DescriptorHeap[] { constantBufferViewHeap, constantBufferViewHeap2 };
+            //commandList.SetDescriptorHeaps(dh.Length, dh);
+            commandList.SetDescriptorHeaps(new DescriptorHeap[] { constantBufferViewHeap });
+            commandList.SetGraphicsRootDescriptorTable(0, constantBufferViewHeap.GPUDescriptorHandleForHeapStart);
+            //commandList.SetGraphicsRootDescriptorTable(1, constantBufferViewHeap.GPUDescriptorHandleForHeapStart);
+            //commandList.SetGraphicsRootConstantBufferView(0, constantBuffer.GPUVirtualAddress);
+            //commandList.SetGraphicsRootConstantBufferView(1, constantBuffer2.GPUVirtualAddress);
+            //commandList.SetGraphicsRootDescriptorTable(1, constantBufferViewHeap2.GPUDescriptorHandleForHeapStart);
+            //commandList.SetGraphicsRootDescriptorTable(0, constantBufferViewHeap2.GPUDescriptorHandleForHeapStart);
 
             commandList.SetViewport(viewport);
             //Scrissor自動設定
@@ -359,6 +480,22 @@ namespace Aritiafel.IlodarAcademy.SharpDX
             swapChain.Present(1, 0);
 
             WaitForPreviousFrame();
+
+            int i = 0;
+            while (true)
+            {
+                try
+                {
+                    i++;
+                    Message s = iq.GetMessage(i);                    
+                    Debug.WriteLine(iq.GetMessage(i));
+                }
+                catch
+                {
+                    break;
+                }
+            }
+            iq.ClearStoredMessages();
         }
     }
 
