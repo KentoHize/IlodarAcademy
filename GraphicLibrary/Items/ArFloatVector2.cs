@@ -144,6 +144,7 @@ namespace GraphicLibrary.Items
 
         public static explicit operator ArFloatVector2(ArFloatVector3 a)
             => new ArFloatVector2(a[0], a[1]);
-        
+        public static explicit operator ArFloatVector2(ArFloatVector4 a)
+            => new ArFloatVector2(a[0], a[1]);
     }
 }

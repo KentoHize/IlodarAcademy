@@ -85,8 +85,7 @@ namespace GraphicLibrary.Items
             double l = GetLength();
             return new ArFloatVector3((float)(_x / l), (float)(_y / l), (float)(_z / l));
         }
-        //public double Determinant(ArFloatVector3 a)
-        //    => CrossProduct(a);
+
         public static float operator *(ArFloatVector3 left, ArFloatVector3 right)
             => left.DotProduct(right);
         public ArFloatVector3 CrossProduct(ArFloatVector3 a)
@@ -152,5 +151,7 @@ namespace GraphicLibrary.Items
 
         public static implicit operator ArFloatVector3(ArFloatVector2 a)
             => new ArFloatVector3(a[0], a[1], 0);
+        public static explicit operator ArFloatVector3(ArFloatVector4 a)
+            => new ArFloatVector3(a[0], a[1], a[2]);
     }
 }
