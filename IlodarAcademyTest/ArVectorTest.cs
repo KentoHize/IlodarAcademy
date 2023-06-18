@@ -27,6 +27,16 @@ namespace IlodarAcademyTest
             Console.WriteLine(f4.ToString("F1"));
             Assert.IsTrue(f1 == f1);
             Assert.IsFalse(f1 == f2);
+
+            ArFloatVector3 f6 = new ArFloatVector3(3, 3, 2);
+            ArFloatVector3 f7 = new ArFloatVector3(3, 3, 3);
+            Assert.IsTrue(f6 < f7);
+            Console.WriteLine(f6.Normalize().ToString());
+            f2 = (ArFloatVector2)f6;
+            f6 = f3;
+            Console.WriteLine(f6.ToString());
+            f6 = ArFloatVector3.Parse("3.7, 3.9, -444");
+            Console.WriteLine(f6.ToString());
         }
     }
 }

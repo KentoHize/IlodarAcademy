@@ -30,6 +30,10 @@ namespace GraphicLibrary.Items
             _y = y;
         }
 
+        public ArFloatVector2(double x, double y)
+            : this((float)x, (float)y)
+        { }
+
         public float this[int index]
         {
             get => index switch { 0 => _x, 1 => _y, _ => throw new IndexOutOfRangeException(nameof(index)) };
@@ -54,11 +58,11 @@ namespace GraphicLibrary.Items
         public override string ToString()
             => ToString("G");
         public string ToString(string format)
-            => $"{_x.ToString(format)}, {_y.ToString(format)}";
+            => $"({_x.ToString(format)}, {_y.ToString(format)})";
         public bool Equals(ArFloatVector2? other)
             => _x == other._x && _y == other._y;
         public int CompareTo(ArFloatVector2? other)
-            => _x > other._x ? 1 : _x < other._x ? -1 : _y > other._y ? 1 : _y < other._y ? -1 : 0;
+            => Equals(other) ? 0 : _x > other._x ? 1 : _x < other._x ? -1 : _y > other._y ? 1 : -1;
         public static ArFloatVector2 operator +(ArFloatVector2 left, ArFloatVector2 right)
             => new ArFloatVector2(left._x + right._x, left._y + right._y);
         public static ArFloatVector2 operator -(ArFloatVector2 left, ArFloatVector2 right)
@@ -137,5 +141,9 @@ namespace GraphicLibrary.Items
             => ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0;
         public static ArFloatVector2 operator -(ArFloatVector2 value)
             => new ArFloatVector2(value._x * -1, value._y * -1);
+
+        public static explicit operator ArFloatVector2(ArFloatVector3 a)
+            => new ArFloatVector2(a[0], a[1]);
+        
     }
 }
