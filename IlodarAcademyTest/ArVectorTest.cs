@@ -22,7 +22,7 @@ namespace IlodarAcademyTest
             Console.WriteLine(ArFloatVector2.Parse("(3.6, 60)").ToString());
 
             Console.WriteLine(f4.ToString("G"));
-            Console.WriteLine(f4.ToString("N3"));            
+            Console.WriteLine(f4.ToString("N3"));
             Console.WriteLine(f4.ToString("R1"));
             Console.WriteLine(f4.ToString("F1"));
             Assert.IsTrue(f1 == f1);
@@ -37,6 +37,13 @@ namespace IlodarAcademyTest
             Console.WriteLine(f6.ToString());
             f6 = ArFloatVector3.Parse("3.7, 3.9, -444");
             Console.WriteLine(f6.ToString());
+        }
+
+        [TestMethod]
+        public void ArFloatVector4Test()
+        {
+            ArFloatVector4 f1 = new ArFloatVector4(0.3, 0.2, 0.7, 0.9);            
+            TestContext.WriteLine(f1.ToString("F3"));
         }
     }
 }
