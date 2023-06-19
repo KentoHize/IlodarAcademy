@@ -15,10 +15,8 @@ namespace GraphicLibrary.Items
             => Dispose();
         public static bool operator ==(ArMatrix? left, ArMatrix? right)
             => left.Equals(right);
-
         public static bool operator !=(ArMatrix? left, ArMatrix? right)
             => !left.Equals(right);
-
         public abstract override bool Equals(object? obj);
         public abstract override int GetHashCode();
         public abstract override string ToString();
