@@ -8,11 +8,21 @@ namespace GraphicLibrary.Items
 {
     public class ArGeometricModel
     {
-        ArFloatVector3[] vertices;
+        ArIntVector3[] vertices;
         int[] indices;
-
-        public ArFloatVector3[] Vertices { get => vertices; set => vertices = value; }
+        public ArIntVector3[] Vertices { get => vertices; set => vertices = value; }
         public int[] Indices { get => indices; set => indices = value; }
+
+        public ArGeometricModel()
+        {
+            vertices = new ArIntVector3[0];
+            indices = new int[0];
+        }
+
+        public void AddPlane(ArGeometricPlane plane)
+        {
+            Array.Resize(vertices.Length + plane.Vertices.Length)
+        }
 
     }
 }

@@ -9,9 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpDXTPF", "SharpDXTPF\Sh
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IlodarAcademy", "IlodarAcademy\IlodarAcademy.csproj", "{3CBE96CE-D23E-4C8A-8ACA-EC506DB8A34C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphicLibrary", "GraphicLibrary\GraphicLibrary.csproj", "{25E676CF-5962-4BE6-95DE-28AB44E24678}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphicLibrary", "GraphicLibrary\GraphicLibrary.csproj", "{25E676CF-5962-4BE6-95DE-28AB44E24678}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IlodarAcademyTest", "IlodarAcademyTest\IlodarAcademyTest.csproj", "{275B2E93-CA1A-436F-9919-F21C979B0E65}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IlodarAcademyTest", "IlodarAcademyTest\IlodarAcademyTest.csproj", "{275B2E93-CA1A-436F-9919-F21C979B0E65}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TPF2", "TPF2\TPF2.csproj", "{CFBB7CC1-3673-4719-8C6A-7888E49A035F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{275B2E93-CA1A-436F-9919-F21C979B0E65}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{275B2E93-CA1A-436F-9919-F21C979B0E65}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{275B2E93-CA1A-436F-9919-F21C979B0E65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFBB7CC1-3673-4719-8C6A-7888E49A035F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFBB7CC1-3673-4719-8C6A-7888E49A035F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFBB7CC1-3673-4719-8C6A-7888E49A035F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFBB7CC1-3673-4719-8C6A-7888E49A035F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
